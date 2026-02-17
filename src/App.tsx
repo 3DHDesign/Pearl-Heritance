@@ -1,13 +1,14 @@
  
 import './App.css'
 import Header from './components/Header'
+import HeroSlider from './components/home/HeroSlider'
 
 function App() { 
 
   return (
     <>
     <Header />
-       <h1 className='text-3xl font-bold underline'>djahdh</h1>
+    <HeroSlider />
     </>
   )
 }
