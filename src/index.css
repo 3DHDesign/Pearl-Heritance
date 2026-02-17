@@ -1,17 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap");
-
 @import "tailwindcss";
 
 :root{
-  /* Fonts */
   --font-heading: "Outfit", sans-serif;
   --font-body: "Inter", sans-serif;
 
-  /* Brand (use blue carefully) */
-  --navy: #0b2d4b;     /* dark blue (primary text / headings) */
-  --sky:  #2aa7df;     /* light blue (ACCENT only) */
+  --navy: #0b2d4b;
+  --sky:  #2aa7df;
 
-  /* Neutrals (main UI should be neutral) */
   --bg: #ffffff;
   --text: #0f172a;
   --muted: #64748b;
@@ -27,12 +23,41 @@ body{
   color: var(--text);
 }
 
-/* Utility classes (simple + consistent) */
+/* Typography helpers */
 .heading-font{ font-family: var(--font-heading); }
-.container-wide{
-  width: min(1200px, calc(100% - 2rem));
+
+/* Containers (your exact system) */
+.container {
+  width: 100%;
   margin-inline: auto;
+  padding-inline: 1rem;
 }
+@media (min-width: 576px)  { .container { max-width: 540px; } }
+@media (min-width: 768px)  { .container { max-width: 720px; } }
+@media (min-width: 992px)  { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px; } }
+@media (min-width: 1400px) { .container { max-width: 1320px; } }
+
+/* Wide container for main layouts */
+.container-wide {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 1200px) { .container-wide { max-width: 1440px; } }
+@media (min-width: 1600px) { .container-wide { max-width: 1600px; } }
+
+/* Extra-wide for big screens */
+.container-xxl {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 1536px) { .container-xxl { max-width: 1728px; } }
+@media (min-width: 1728px) { .container-xxl { max-width: 1800px; } }
+@media (min-width: 1920px) { .container-xxl { max-width: 1920px; } }
+
+/* Buttons */
 .btn-primary{
   background: var(--navy);
   color: white;
