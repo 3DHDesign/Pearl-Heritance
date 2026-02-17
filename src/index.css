@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+:root{
+  /* Fonts */
+  --font-heading: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Brand (use blue carefully) */
+  --navy: #0b2d4b;     /* dark blue (primary text / headings) */
+  --sky:  #2aa7df;     /* light blue (ACCENT only) */
+
+  /* Neutrals (main UI should be neutral) */
+  --bg: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --surface: #f8fafc;
+}
+
+/* Base */
+html, body { height: 100%; }
+body{
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Utility classes (simple + consistent) */
+.heading-font{ font-family: var(--font-heading); }
+.container-wide{
+  width: min(1200px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+.btn-primary{
+  background: var(--navy);
+  color: white;
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+}
+.btn-accent{
+  background: var(--sky);
+  color: white;
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+}
