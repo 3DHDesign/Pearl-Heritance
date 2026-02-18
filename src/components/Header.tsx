@@ -1,13 +1,19 @@
+import { NavLink } from "react-router-dom";
 import headerShape from "../assets/images/side.svg";
 
-const navItems = ["Home", "About Us", "Projects", "Blogs", "Contact Us"];
+const navItems = [
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/about" },
+  { label: "Projects", to: "/projects" },
+  { label: "Blogs", to: "/blog" }, // IMPORTANT: your route is /blog (not /blogs)
+  { label: "Contact Us", to: "/contact" },
+];
 
 export default function Header() {
   return (
     <header className="w-full bg-white py-5">
       <div className="container-wide">
         <div className="@container relative flex items-center justify-between rounded-[34px] bg-[color:var(--surface)] px-8 md:px-12 py-5 overflow-hidden">
-          
           {/* Decorative SVG */}
           <img
             src={headerShape}
@@ -17,7 +23,7 @@ export default function Header() {
           />
 
           {/* Brand */}
-          <div className="relative flex items-center gap-3">
+          <NavLink to="/" className="relative flex items-center gap-3">
             <div className="h-11 w-11 rounded-full bg-white border border-[color:var(--border)] flex items-center justify-center">
               <span className="heading-font text-[color:var(--navy)] font-semibold">
                 P
@@ -27,29 +33,28 @@ export default function Header() {
             <span className="heading-font text-[20px] font-semibold text-[color:var(--text)]">
               Pearl Heritance
             </span>
-          </div>
+          </NavLink>
 
           {/* Nav */}
           <nav className="relative hidden md:flex items-center gap-8 lg:gap-10">
-            {navItems.map((label) => {
-              const isActive = label === "Home"; // later we’ll replace with router active
-              return (
-                <a
-                  key={label}
-                  href="#"
-                  className={[
+            {navItems.map((item) => (
+              <NavLink
+                key={item.label}
+                to={item.to}
+                className={({ isActive }) =>
+                  [
                     "text-[15px] font-medium transition",
                     isActive
                       ? "text-[color:var(--navy)] underline underline-offset-8 decoration-[color:var(--sky)] decoration-2"
                       : "text-black/70 hover:text-[color:var(--navy)]",
-                  ].join(" ")}
-                >
-                  {label}
-                </a>
-              );
-            })}
+                  ].join(" ")
+                }
+                end={item.to === "/"} // makes Home active only on "/"
+              >
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
-
         </div>
       </div>
     </header>

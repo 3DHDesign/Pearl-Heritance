@@ -1,28 +1,25 @@
- 
-import './App.css'
-import Header from './components/Header'
-import HeroSlider from './components/home/HeroSlider' 
-import ProjectsSection from './components/home/ProjectsSection'
-import ServicesShowcase from './components/home/ServicesShowcase'
-import ServicesSlider from './components/home/ServicesSlider'
-import TeamSection from './components/home/TeamSection'
-import TestimonialsSection from './components/home/Testimonialssection'
-import VideoBannerSection from './components/home/VideoBannerSection'
+import "./App.css";
+import { Routes, Route } from "react-router-dom";
 
-function App() { 
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import BlogPage from "./pages/BlogPage";
+import BlogDetailPage from "./pages/BlogDetailPage";
+import Footer from "./components/Footer";
 
+function App() {
   return (
     <>
-    <Header />
-    <HeroSlider />
-    <ServicesShowcase/> 
-    <ProjectsSection/>
-    <ServicesSlider/>
-    <VideoBannerSection/>
-    <TeamSection/>
-    <TestimonialsSection/>
+      <Header />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogDetailPage />} />
+      </Routes>
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

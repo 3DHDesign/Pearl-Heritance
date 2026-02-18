@@ -82,3 +82,6 @@ body{
 .preserve-3d {
   transform-style: preserve-3d;
 }
+body {
+  overflow-x: clip;
+}
