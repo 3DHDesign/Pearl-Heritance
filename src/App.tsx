@@ -1,7 +1,11 @@
  
 import './App.css'
 import Header from './components/Header'
-import HeroSlider from './components/home/HeroSlider'
+import HeroSlider from './components/home/HeroSlider' 
+import ProjectsSection from './components/home/ProjectsSection'
+import ServicesShowcase from './components/home/ServicesShowcase'
+import ServicesSlider from './components/home/ServicesSlider'
+import VideoBannerSection from './components/home/VideoBannerSection'
 
 function App() { 
 
@@ -9,6 +13,10 @@ function App() {
     <>
     <Header />
     <HeroSlider />
+    <ServicesShowcase/> 
+    <ProjectsSection/>
+    <ServicesSlider/>
+    <VideoBannerSection/>
     </>
   )
 }

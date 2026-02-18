@@ -72,3 +72,13 @@ body{
   padding: 0.75rem 1.25rem;
   font-weight: 600;
 }
+
+
+/* Add to your global CSS */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
