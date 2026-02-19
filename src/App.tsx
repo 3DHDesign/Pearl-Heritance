@@ -10,6 +10,7 @@ import AboutUs from "./pages/AboutUs";
 import ProjectsLanding from "./pages/ProjectsLanding";
 import ProjectsList from "./pages/ProjectsList";
 import ProjectDetail from "./pages/ProjectDetail";
+import ContactUs from "./pages/ContactUs";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
 <Route path="/projects/:category" element={<ProjectsList />} />
 <Route path="/project/:id" element={<ProjectDetail />} />
 
+<Route path="/contact" element={<ContactUs />} />
       </Routes>
       <Footer />
     </>
