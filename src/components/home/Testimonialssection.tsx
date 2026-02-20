@@ -6,8 +6,7 @@ import type { Swiper as SwiperType } from "swiper";
 import sideSvg from "../../assets/images/side.svg";
 
 // Import Swiper CSS
-import "swiper/css";
-
+ 
 // ── testimonials data ──────────────────────────────────────────────────────
 const testimonials = [
   {
@@ -211,7 +210,7 @@ export default function TestimonialsSection() {
               1200:{ slidesPerView: 2.8, spaceBetween: 24 },
             }}
           >
-            {testimonials.map((t, idx) => (
+            {testimonials.map((t) => (
               <SwiperSlide 
                 key={t.id} 
                 style={{ width: 520, maxWidth: "90vw" }}

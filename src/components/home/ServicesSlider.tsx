@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react"; 
-import "swiper/css";
+ 
 
 import { Autoplay, Mousewheel } from "swiper/modules";
 type Service = {

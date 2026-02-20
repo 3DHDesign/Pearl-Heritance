@@ -58,8 +58,7 @@ const projects: Project[] = [
 export default function ProjectsShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null); 
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {

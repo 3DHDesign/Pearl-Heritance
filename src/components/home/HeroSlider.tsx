@@ -5,8 +5,7 @@ import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, EffectFade } from "swiper/modules";
 import cornerSvg from "../../assets/images/corner.svg";
 
-import "swiper/css";
-import "swiper/css/effect-fade";
+ 
 
 // your white corner panel svg
 
