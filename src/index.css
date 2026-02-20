@@ -3,6 +3,8 @@
 @import "swiper/css/pagination";
 @import "swiper/css/scrollbar";
 @import "swiper/css";
+
+
 :root{
   --font-heading: "Outfit", sans-serif;
   --font-body: "Inter", sans-serif;
@@ -12,9 +14,9 @@
 
   --bg: #ffffff;
   --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --surface: #f8fafc;
+  --muted: #5f6b7a;     /* Rich grey - much more visible */
+  --border: #cbd5e1;    /* Clean border */
+  --surface: #f8fafc;   /* Keep as is */
 }
 
 /* Base */
