@@ -14,7 +14,7 @@ type PageHeroProps = {
 
 export default function PageHero({ title, subtitle, bgImage, crumbs }: PageHeroProps) {
   return (
-    <section className="max-w-6xl mx-auto px-4 pt-6">
+    <section className="container-wide mx-auto px-4 pt-6">
       <div className="relative overflow-hidden rounded-[28px]">
         {/* Background image */}
         <img

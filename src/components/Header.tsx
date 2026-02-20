@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import headerShape from "../assets/images/side.svg";
+import logo from "../assets/images/logo.svg";
 
 const navItems = [
   { label: "Home", to: "/" },
@@ -24,15 +25,13 @@ export default function Header() {
 
           {/* Brand */}
           <NavLink to="/" className="relative flex items-center gap-3">
-            <div className="h-11 w-11 rounded-full bg-white border border-[color:var(--border)] flex items-center justify-center">
-              <span className="heading-font text-[color:var(--navy)] font-semibold">
-                P
-              </span>
-            </div>
+            <img
+              src={logo}
+              alt="Pearl Heritage"
+              className="h-10 w-auto object-contain"
+            />
 
-            <span className="heading-font text-[20px] font-semibold text-[color:var(--text)]">
-              Pearl Heritance
-            </span>
+             
           </NavLink>
 
           {/* Nav */}
