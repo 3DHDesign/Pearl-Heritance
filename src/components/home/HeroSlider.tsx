@@ -1,17 +1,16 @@
-// src/components/HeroSlider.tsx
-import { useMemo, useRef, useState } from "react";
+ // src/components/HeroSlider.tsx
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { Autoplay, EffectFade } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import cornerSvg from "../../assets/images/corner.svg";
 
- 
-
-// your white corner panel svg
+// Import Swiper CSS
+import "swiper/css";
 
 type Slide = {
   id: number;
-  serviceIndex: number; // 0..7
+  serviceIndex: number;
   projectName: string;
   projectDesc: string;
   tagline: string;
@@ -33,7 +32,6 @@ export default function HeroSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Internet images (temporary). Replace later with API.
   const slides: Slide[] = useMemo(
     () => [
       {
@@ -123,6 +121,26 @@ export default function HeroSlider() {
     []
   );
 
+  // Preload nearby slides for smooth transitions
+  useEffect(() => {
+    const count = slides.length;
+    if (!count) return;
+
+    const idxs = [
+      activeIndex,
+      (activeIndex + 1) % count,
+      (activeIndex + 2) % count,
+      (activeIndex - 1 + count) % count,
+    ];
+
+    idxs.forEach((i) => {
+      const s = slides[i];
+      if (!s) return;
+      const img = new Image();
+      img.src = s.imageUrl;
+    });
+  }, [activeIndex, slides]);
+
   const activeServiceIndex = slides[activeIndex]?.serviceIndex ?? 0;
 
   const goPrev = () => swiperRef.current?.slidePrev();
@@ -134,35 +152,52 @@ export default function HeroSlider() {
   };
 
   return (
-    <section className="w-full bg-white pt-6">
-      <div className="container-wide">
-        <div className="bg-[color:var(--surface)] rounded-[34px] p-6 md:p-10">
-          <div className="grid lg:grid-cols-2 gap-10 items-stretch">
-            {/* LEFT */}
-            <div className="flex flex-col justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-[color:var(--navy)]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--sky)]" />
-                  Design &amp; Build
+    <section className="w-full bg-gradient-to-b   pt-8 pb-4">
+      <div className="container-wide px-4 sm:px-6 lg:px-8">
+        <div className="bg-white/90 backdrop-blur-sm rounded-[2.5rem] p-6 md:p-10 border border-[var(--border)] shadow-2xl shadow-black/5">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-stretch">
+            {/* LEFT COLUMN */}
+            <div className="flex flex-col justify-between space-y-8">
+              <div className="space-y-5">
+                {/* Animated badge */}
+                <div className="inline-flex items-center gap-2 group">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sky)] opacity-40" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--sky)]" />
+                  </span>
+                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--navy)]">
+                    Design & Build
+                  </span>
                 </div>
 
-                <h1 className="heading-font mt-4 text-4xl md:text-5xl font-semibold leading-[1.05] text-[color:var(--text)]">
-                  Creating Homes That <br />
-                  Tell Your Story
+                {/* Headline with gradient */}
+                <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--navy)] leading-[1.1] tracking-tight">
+                  Creating Homes That
+                  <br />
+                  <span className="relative inline-block mt-2">
+                    <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--navy)] to-[var(--sky)]">
+                      Tell Your Story
+                    </span>
+                    <span className="absolute bottom-2 left-0 w-full h-3 bg-[var(--sky)]/20 -rotate-1 rounded-lg -z-0" />
+                  </span>
                 </h1>
 
-                <p className="mt-5 text-[color:var(--muted)] text-lg leading-relaxed max-w-[520px]">
+                {/* Tagline with fade effect */}
+                <p
+                  key={activeIndex}
+                  className="text-[var(--muted)] text-lg leading-relaxed max-w-[520px] font-light transition-opacity duration-500"
+                >
                   {slides[activeIndex]?.tagline}
                 </p>
               </div>
 
-              {/* Services list */}
-              <div className="mt-10">
-                <p className="text-xs uppercase tracking-wider text-[color:var(--muted)] font-semibold">
-                  Services
+              {/* Services grid with blur effect */}
+              <div className="pt-4">
+                <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-5">
+                  Our Services
                 </p>
 
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {services.map((name, idx) => {
                     const isActive = idx === activeServiceIndex;
                     return (
@@ -170,25 +205,40 @@ export default function HeroSlider() {
                         key={name}
                         type="button"
                         onClick={() => goToService(idx)}
-                        className={[
-                          "text-left text-[15px] leading-snug transition",
-                          "cursor-pointer select-none",
-                          isActive
-                            ? "opacity-100 blur-0 text-[color:var(--navy)] font-semibold"
-                            : "opacity-40 blur-[1px] text-[color:var(--text)] hover:opacity-70 hover:blur-0",
-                        ].join(" ")}
+                        className={`
+                          group relative text-left px-4 py-3 rounded-xl transition-all duration-500
+                          ${isActive 
+                            ? 'bg-[var(--navy)]/5' 
+                            : 'hover:bg-[var(--surface)]'
+                          }
+                        `}
                       >
-                        <span className="inline-flex items-start gap-3">
-                          <span
-                            className={[
-                              "mt-2 h-2 w-2 rounded-full flex-none",
-                              isActive
-                                ? "bg-[color:var(--sky)]"
-                                : "bg-black/20",
-                            ].join(" ")}
-                          />
-                          <span>{name}</span>
-                        </span>
+                        <div className="flex items-center gap-3">
+                          {/* Animated dot */}
+                          <span className={`
+                            w-2 h-2 rounded-full transition-all duration-500
+                            ${isActive
+                              ? 'bg-[var(--sky)] scale-110'
+                              : 'bg-[var(--border)] scale-90 group-hover:scale-100 group-hover:bg-[var(--navy)]/40'
+                            }
+                          `} />
+                          
+                          {/* Service name with blur effect */}
+                          <span className={`
+                            text-[15px] font-medium transition-all duration-500
+                            ${isActive
+                              ? 'text-[var(--navy)] blur-0'
+                              : 'text-[var(--muted)] blur-[0.5px] group-hover:blur-0 group-hover:text-[var(--navy)]'
+                            }
+                          `}>
+                            {name}
+                          </span>
+                        </div>
+
+                        {/* Active indicator line */}
+                        {isActive && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--sky)] to-transparent rounded-full" />
+                        )}
                       </button>
                     );
                   })}
@@ -196,86 +246,122 @@ export default function HeroSlider() {
               </div>
             </div>
 
-            {/* RIGHT */}
-            <div className="relative h-[360px] md:h-[420px] lg:h-[460px]">
-              {/* Image area (clipped) */}
-              <div className="absolute inset-0 rounded-[28px] overflow-hidden">
+            {/* RIGHT COLUMN - Image Slider */}
+            <div className="relative h-[400px] md:h-[460px] lg:h-[500px] group">
+              {/* Image container */}
+              <div className="absolute inset-0 rounded-[2rem] overflow-hidden shadow-2xl">
                 <Swiper
-                  modules={[Autoplay, EffectFade]}
-                  effect="fade"
-                  fadeEffect={{ crossFade: true }}
-                  speed={900}
+                  modules={[Autoplay]}
+                  effect="slide"
+                  slidesPerView={1}
+                  spaceBetween={0}
+                  speed={800}
                   loop
-                  autoplay={{ delay: 4000, disableOnInteraction: false }}
+                  loopAdditionalSlides={2}
+                  watchSlidesProgress
+                  resistanceRatio={0.85}
+                  autoplay={{ 
+                    delay: 5000, 
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true 
+                  }}
                   onSwiper={(sw) => (swiperRef.current = sw)}
                   onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
                   className="h-full w-full"
                 >
-                  {slides.map((s) => (
+                  {slides.map((s, idx) => (
                     <SwiperSlide key={s.id}>
                       <div className="relative h-full w-full">
                         <img
                           src={s.imageUrl}
                           alt={s.projectName}
-                          className="h-full w-full object-cover"
-                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-[8s] group-hover:scale-105"
+                          loading="eager"
+                          decoding="async"
+                          fetchPriority={idx === 0 ? "high" : "auto"}
+                          draggable={false}
                         />
-                        <div className="absolute inset-0 bg-black/10" />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy)]/30 via-transparent to-transparent" />
                       </div>
                     </SwiperSlide>
                   ))}
                 </Swiper>
               </div>
 
-              {/* Corner SVG panel (NOT clipped) */}
-              <div className="absolute bottom-[-2px] right-[-2px] z-20 w-[320px] sm:w-[360px]">
+              {/* Corner SVG panel */}
+              <div className="absolute bottom-[-2px] right-[-2px] z-20 w-[340px] sm:w-[380px] transform transition-transform duration-500 group-hover:translate-x-[-4px] group-hover:translate-y-[-4px]">
                 <img
                   src={cornerSvg}
                   alt=""
                   aria-hidden="true"
                   className="w-full h-auto pointer-events-none select-none"
+                  style={{
+                    filter: 'brightness(0.98)',
+                  }}
                 />
 
-                {/* ✅ FIX: text moved DOWN slightly */}
-                <div className="absolute inset-0 pt-14 pb-5 px-5 flex flex-col justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--muted)]">
-                      Project
+                <div className="absolute inset-0 pt-16 pb-6 px-6 flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+                      Featured Project
                     </p>
-                    <h3 className="heading-font mt-1 text-xl font-semibold text-[color:var(--text)]">
+                    <h3 className="heading-font text-xl md:text-2xl font-semibold text-[var(--navy)]">
                       {slides[activeIndex]?.projectName}
                     </h3>
-                    <p className="mt-2 text-sm text-[color:var(--muted)] leading-snug">
+                    <p className="text-sm text-[var(--muted)] leading-snug line-clamp-2">
                       {slides[activeIndex]?.projectDesc}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 mt-4">
                     <button
                       type="button"
                       onClick={goPrev}
-                      className="h-10 w-10 rounded-full bg-white border border-[color:var(--border)] text-[color:var(--navy)] hover:bg-black/5 transition"
+                      className="h-10 w-10 rounded-full bg-white border border-[var(--border)] text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
                       aria-label="Previous slide"
                     >
-                      ←
+                      <span className="text-lg">←</span>
                     </button>
                     <button
                       type="button"
                       onClick={goNext}
-                      className="h-10 w-10 rounded-full bg-white border border-[color:var(--border)] text-[color:var(--navy)] hover:bg-black/5 transition"
+                      className="h-10 w-10 rounded-full bg-white border border-[var(--border)] text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white transition-all duration-300 flex items-center justify-center shadow-md hover:shadow-lg"
                       aria-label="Next slide"
                     >
-                      →
+                      <span className="text-lg">→</span>
                     </button>
 
-                    <div className="ml-auto text-xs font-semibold text-[color:var(--muted)]">
-                      {String(activeIndex + 1).padStart(2, "0")} / 08
+                    <div className="ml-auto flex items-center gap-2">
+                      <span className="text-sm font-mono font-semibold text-[var(--navy)]">
+                        {String(activeIndex + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-xs text-[var(--muted)]">/</span>
+                      <span className="text-xs text-[var(--muted)]">
+                        {String(slides.length).padStart(2, "0")}
+                      </span>
                     </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="absolute bottom-2 left-6 right-6 h-0.5 bg-[var(--border)]/30 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] transition-all duration-300"
+                      style={{ 
+                        width: `${((activeIndex + 1) / slides.length) * 100}%`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
+
+              {/* Active indicator */}
+              <div className="absolute top-4 left-4 z-30">
+                <span className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-mono text-[var(--navy)] border border-[var(--border)] shadow-sm">
+                  {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+                </span>
+              </div>
             </div>
-            {/* end RIGHT */}
           </div>
         </div>
       </div>

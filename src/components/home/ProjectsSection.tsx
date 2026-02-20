@@ -80,7 +80,6 @@ export default function ProjectsSection() {
       const leftCards = leftRefs.current.filter(Boolean);
       const rightCards = rightRefs.current.filter(Boolean);
 
-      // Init stacks
       leftCards.forEach((card, i) => {
         gsap.set(card, {
           position: "absolute",
@@ -147,7 +146,6 @@ export default function ProjectsSection() {
         tl.to(card, { scale: 0.96, opacity: 0.72, duration: 0.45 }, "<");
       };
 
-      // Order: L0 -> R0 -> L1 -> R1
       const maxPairs = Math.max(leftCards.length, rightCards.length);
       for (let i = 0; i < maxPairs; i++) {
         if (leftCards[i]) {
@@ -177,256 +175,38 @@ export default function ProjectsSection() {
       className="relative overflow-hidden"
       style={{
         background:
-          "radial-gradient(900px 420px at 15% 20%, rgba(42,167,223,0.10), transparent 55%), linear-gradient(var(--bg), var(--surface))",
+          "radial-gradient(900px 420px at 15% 20%, rgba(42,167,223,0.12), transparent 55%), linear-gradient(145deg, var(--bg), var(--surface))",
       }}
     >
-      {/* CSS scoped to this component */}
-      <style>{`
-        .proj-grid{
-          display:grid;
-          grid-template-columns: 1fr;
-          height: 100vh;
-        }
-        @media (min-width: 1024px){
-          .proj-grid{
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        .proj-panel{
-          display:flex;
-          flex-direction:column;
-          height:100%;
-          padding: 48px 22px 36px;
-        }
-        @media (min-width: 1024px){
-          .proj-panel{
-            padding: 56px 42px 40px;
-          }
-        }
-
-        .proj-left{
-          border-bottom: 1px solid var(--border);
-        }
-        @media (min-width: 1024px){
-          .proj-left{
-            border-right: 1px solid var(--border);
-            border-bottom: none;
-          }
-        }
-
-        .proj-eyebrow{
-          display:flex;
-          align-items:center;
-          gap:10px;
-          margin-bottom: 10px;
-          color: var(--sky);
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: .18em;
-          text-transform: uppercase;
-        }
-        .proj-eyebrow:before{
-          content:"";
-          width: 26px;
-          height: 2px;
-          background: var(--sky);
-          border-radius: 999px;
-        }
-
-        .proj-desc{
-          margin-top: 12px;
-          font-size: 14px;
-          line-height: 1.7;
-          color: var(--muted);
-          max-width: 360px;
-        }
-
-        .proj-progress-line{
-          position: relative;
-          width: 100%;
-          height: 3px;
-          background: rgba(15,23,42,0.10);
-          border-radius: 999px;
-          overflow: hidden;
-        }
-        .proj-progress-fill{
-          position:absolute;
-          left:0; top:0;
-          height:100%;
-          background: var(--sky);
-          border-radius: 999px;
-          transition: width .45s cubic-bezier(.22,1,.36,1);
-        }
-
-        .proj-card-inner{
-          position: relative;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-          border-radius: 22px;
-          border: 1px solid rgba(255,255,255,0.70);
-          box-shadow: 0 26px 70px -42px rgba(2,6,23,0.35);
-          background: #fff;
-        }
-
-        .proj-card-inner img{
-          width:100%;
-          height:100%;
-          object-fit: cover;
-          transform: scale(1.02);
-          transition: transform .9s cubic-bezier(.22,1,.36,1);
-        }
-
-        .proj-card-outer:hover .proj-card-inner img{
-          transform: scale(1.06);
-        }
-
-        /* Overlay to keep text readable */
-        .proj-overlay{
-          position:absolute;
-          inset:0;
-          background: linear-gradient(to top, rgba(2,6,23,0.72) 0%, rgba(2,6,23,0.12) 45%, transparent 75%);
-          z-index:2;
-        }
-
-        .proj-top-meta{
-          position:absolute;
-          top:16px;
-          left:16px;
-          right:16px;
-          z-index:3;
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap:12px;
-        }
-
-        .proj-pill{
-          display:inline-flex;
-          align-items:center;
-          gap:8px;
-          background: rgba(255,255,255,0.82);
-          border: 1px solid rgba(15,23,42,0.10);
-          padding: 6px 12px;
-          border-radius: 999px;
-          backdrop-filter: blur(10px);
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: .14em;
-          text-transform: uppercase;
-          color: rgba(15,23,42,0.75);
-        }
-
-        .proj-index{
-          background: rgba(255,255,255,0.82);
-          border: 1px solid rgba(15,23,42,0.10);
-          padding: 6px 10px;
-          border-radius: 999px;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: .12em;
-          color: rgba(15,23,42,0.55);
-          backdrop-filter: blur(10px);
-        }
-
-        .proj-explore{
-          position:absolute;
-          top:50%;
-          left:50%;
-          transform: translate(-50%,-50%) scale(.92);
-          opacity: 0;
-          z-index: 5;
-          width: 84px;
-          height: 84px;
-          border-radius: 999px;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          flex-direction:column;
-          gap:4px;
-          background: rgba(255,255,255,0.78);
-          border: 1px solid rgba(15,23,42,0.12);
-          color: var(--navy);
-          box-shadow: 0 25px 70px -38px rgba(2,6,23,0.45);
-          transition: all .35s cubic-bezier(.22,1,.36,1);
-          cursor:pointer;
-          font-weight: 700;
-          letter-spacing: .12em;
-          text-transform: uppercase;
-          font-size: 11px;
-        }
-        .proj-card-outer:hover .proj-explore{
-          opacity: 1;
-          transform: translate(-50%,-50%) scale(1);
-        }
-
-        .proj-meta{
-          position:absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          padding: 18px 18px;
-          z-index: 3;
-        }
-
-        .proj-title{
-          font-family: var(--font-heading);
-          font-size: clamp(18px, 2.1vw, 26px);
-          font-weight: 600;
-          line-height: 1.2;
-          color: #fff;
-          margin: 0 0 10px 0;
-          text-shadow: 0 14px 30px rgba(2,6,23,0.35);
-        }
-
-        .proj-meta-row{
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap: 12px;
-          font-size: 12px;
-          letter-spacing: .12em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.72);
-          font-weight: 600;
-        }
-
-        .proj-active-line{
-          position:absolute;
-          left:18px;
-          right:18px;
-          bottom: 10px;
-          height: 3px;
-          border-radius: 999px;
-          background: var(--sky);
-          transform: scaleX(0);
-          transform-origin: left;
-          animation: projLine .55s cubic-bezier(.22,1,.36,1) forwards;
-        }
-        @keyframes projLine { to { transform: scaleX(1); } }
-      `}</style>
-
-      <div className="container-wide">
-        <div className="proj-grid">
-          {/* LEFT */}
-          <div className="proj-panel proj-left">
+      <div className="container-wide px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 h-screen">
+          
+          {/* LEFT PANEL */}
+          <div className="flex flex-col h-full py-12 px-5 sm:px-8 lg:py-14 lg:px-12 border-b lg:border-b-0 lg:border-r border-[var(--border)]">
             {/* Header */}
-            <div className="mb-6">
-              <div className="proj-eyebrow">Selected Works</div>
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-7 h-0.5 bg-[var(--sky)] rounded-full" />
+                <span className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--sky)]">
+                  Selected Works
+                </span>
+              </div>
 
-              <h2 className="heading-font text-[color:var(--text)] text-4xl md:text-5xl font-semibold leading-[1.05]">
+              <h2 className="heading-font text-[var(--text)] text-4xl md:text-5xl font-semibold leading-[1.1]">
                 Luxury <br />
-                <span className="text-[color:var(--sky)]">Collection</span>
+                <span className="text-[var(--sky)] relative">
+                  Collection
+                  <span className="absolute -bottom-1 left-0 w-12 h-0.5 bg-[var(--sky)]/30 rounded-full" />
+                </span>
               </h2>
 
-              <p className="proj-desc">
+              <p className="mt-4 text-sm text-[var(--muted)] leading-relaxed max-w-[360px]">
                 Precision, craft, and calm — every project a study in architectural restraint.
               </p>
             </div>
 
-            {/* Left stack */}
-            <div className="relative flex-1">
+            {/* Left card stack */}
+            <div className="relative flex-1 min-h-0">
               {leftProjects.map((p, i) => {
                 const globalIndex = i * 2;
                 return (
@@ -435,8 +215,7 @@ export default function ProjectsSection() {
                     ref={(el) => {
                       if (el) leftRefs.current[i] = el;
                     }}
-                    className="proj-card-outer"
-                    style={{ position: "absolute", inset: 0 }}
+                    className="absolute inset-0 group"
                   >
                     <ProjectCard
                       p={p}
@@ -451,22 +230,23 @@ export default function ProjectsSection() {
             {/* Bottom progress */}
             <div className="mt-6">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-sm font-semibold text-[color:var(--muted)]">
-                  <span className="text-[color:var(--sky)]">
+                <div className="text-sm font-semibold text-[var(--muted)]">
+                  <span className="text-[var(--sky)] font-bold">
                     {String(activeIndex + 1).padStart(2, "0")}
                   </span>
-                  <span className="mx-2 text-[color:var(--muted)]">/</span>
+                  <span className="mx-2 text-[var(--border)]">/</span>
                   {String(projects.length).padStart(2, "0")}
                 </div>
 
-                <div className="text-xs font-semibold tracking-[0.16em] uppercase text-[color:var(--muted)]">
+                <div className="text-xs font-semibold tracking-[0.16em] uppercase text-[var(--muted)]">
                   {projects[activeIndex]?.location}
                 </div>
               </div>
 
-              <div className="proj-progress-line">
+              {/* Progress bar */}
+              <div className="relative w-full h-1 bg-[var(--border)]/50 rounded-full overflow-hidden">
                 <div
-                  className="proj-progress-fill"
+                  className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] transition-all duration-500"
                   style={{
                     width: `${((activeIndex + 1) / projects.length) * 100}%`,
                   }}
@@ -475,15 +255,15 @@ export default function ProjectsSection() {
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="proj-panel">
+          {/* RIGHT PANEL */}
+          <div className="flex flex-col h-full py-12 px-5 sm:px-8 lg:py-14 lg:px-12">
             {/* Top tags */}
             <div className="flex items-center justify-between mb-6">
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-4">
                 {projects.map((p, idx) => (
                   <div
                     key={p.id}
-                    className="text-[10px] font-bold tracking-[0.16em] uppercase"
+                    className="text-[10px] font-bold tracking-[0.16em] uppercase cursor-default transition-all duration-300"
                     style={{
                       color: idx === activeIndex ? "var(--sky)" : "var(--muted)",
                       borderBottom:
@@ -491,7 +271,6 @@ export default function ProjectsSection() {
                           ? "2px solid var(--sky)"
                           : "2px solid transparent",
                       paddingBottom: 6,
-                      transition: "all .25s ease",
                     }}
                   >
                     {p.tag}
@@ -499,13 +278,14 @@ export default function ProjectsSection() {
                 ))}
               </div>
 
-              <button className="btn-accent text-[10px] tracking-[0.14em] uppercase py-2 px-4">
-                View All
+              <button className="group relative overflow-hidden rounded-full bg-[var(--navy)] text-white text-[10px] tracking-[0.14em] uppercase py-2.5 px-5 font-semibold hover:bg-[var(--sky)] transition-all duration-300 shadow-md hover:shadow-lg">
+                <span className="relative z-10">View All</span>
+                <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </button>
             </div>
 
-            {/* Right stack */}
-            <div className="relative flex-1">
+            {/* Right card stack */}
+            <div className="relative flex-1 min-h-0">
               {rightProjects.map((p, i) => {
                 const globalIndex = i * 2 + 1;
                 return (
@@ -514,8 +294,7 @@ export default function ProjectsSection() {
                     ref={(el) => {
                       if (el) rightRefs.current[i] = el;
                     }}
-                    className="proj-card-outer"
-                    style={{ position: "absolute", inset: 0 }}
+                    className="absolute inset-0 group"
                   >
                     <ProjectCard
                       p={p}
@@ -528,26 +307,31 @@ export default function ProjectsSection() {
 
               {/* Placeholder */}
               {activeIndex % 2 === 0 && (
-                <div className="absolute inset-0 grid place-items-center opacity-60">
-                  <div className="text-xs font-bold tracking-[0.22em] uppercase text-[color:var(--muted)]">
-                    Scroll to explore
+                <div className="absolute inset-0 flex items-center justify-center opacity-50 pointer-events-none">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-px h-12 bg-gradient-to-b from-transparent via-[var(--sky)] to-transparent" />
+                    <div className="text-xs font-bold tracking-[0.22em] uppercase text-[var(--muted)]">
+                      Scroll to explore
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Dots */}
+            {/* Bottom dots */}
             <div className="mt-6 flex items-center gap-2 justify-end">
               {projects.map((_, idx) => (
                 <div
                   key={idx}
+                  className="rounded-full transition-all duration-500"
                   style={{
-                    width: idx === activeIndex ? 26 : 6,
+                    width: idx === activeIndex ? 28 : 6,
                     height: 6,
-                    borderRadius: 999,
                     background:
-                      idx === activeIndex ? "var(--sky)" : "rgba(15,23,42,0.14)",
-                    transition: "all .4s cubic-bezier(.22,1,.36,1)",
+                      idx === activeIndex 
+                        ? "linear-gradient(90deg, var(--sky), var(--navy))" 
+                        : "rgba(15,23,42,0.1)",
+                    boxShadow: idx === activeIndex ? "0 0 10px rgba(42,167,223,0.3)" : "none",
                   }}
                 />
               ))}
@@ -569,30 +353,51 @@ function ProjectCard({
   isActive: boolean;
 }) {
   return (
-    <div className="proj-card-inner">
-      <img src={p.image} alt={p.title} loading="lazy" />
+    <div className="relative w-full h-full overflow-hidden rounded-2xl border border-white/15 shadow-2xl bg-white group-hover:shadow-3xl transition-shadow duration-300">
+      <img 
+        src={p.image} 
+        alt={p.title} 
+        className="w-full h-full object-cover scale-[1.02] group-hover:scale-110 transition-transform duration-1000 saturate-[0.95] group-hover:saturate-105" 
+        loading="lazy" 
+      />
 
-      <div className="proj-overlay" />
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/80 via-[#020617]/20 via-40% to-transparent pointer-events-none" />
 
-      {/* top meta */}
-      <div className="proj-top-meta">
-        <div className="proj-pill">{p.tag}</div>
-        <div className="proj-index">{String(index + 1).padStart(2, "0")}</div>
+      {/* Top meta */}
+      <div className="absolute top-4 left-4 right-4 z-10 flex items-center justify-between gap-3">
+        <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm border border-white/40 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-[0.14em] uppercase text-[var(--navy)] shadow-sm">
+          {p.tag}
+        </div>
+        <div className="bg-black/35 backdrop-blur-sm border border-white/20 px-2.5 py-1.5 rounded-full text-xs font-semibold tracking-[0.12em] text-white/90">
+          {String(index + 1).padStart(2, "0")}
+        </div>
       </div>
 
-      {/* explore */}
-      <div className="proj-explore" role="button" aria-label="View project">
-        <span>VIEW</span>
-        <span style={{ fontSize: 10, opacity: 0.75 }}>↗</span>
+      {/* Explore button */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100 z-20 w-20 h-20 rounded-full bg-white/95 backdrop-blur-sm border border-white/60 text-[var(--navy)] shadow-2xl flex flex-col items-center justify-center gap-1 cursor-pointer transition-all duration-500"
+        role="button" 
+        aria-label="View project"
+      >
+        <span className="text-[10px] font-semibold tracking-[0.12em] uppercase">VIEW</span>
+        <span className="text-sm opacity-80">↗</span>
       </div>
 
-      {/* bottom meta */}
-      <div className="proj-meta">
-        {isActive && <div className="proj-active-line" />}
-        <h3 className="proj-title">{p.title}</h3>
-        <div className="proj-meta-row">
-          <span>{p.location}</span>
-          <span>{p.year}</span>
+      {/* Bottom meta */}
+      <div className="absolute left-0 right-0 bottom-0 p-5 z-10 bg-gradient-to-t from-black/40 to-transparent rounded-b-2xl">
+        {isActive && (
+          <div className="absolute left-5 right-5 bottom-2 h-0.5 bg-[var(--sky)] rounded-full animate-[projLine_0.5s_cubic-bezier(.22,1,.36,1)_forwards] origin-left" />
+        )}
+        <h3 className="heading-font text-lg md:text-xl lg:text-2xl font-semibold text-white mb-2 drop-shadow-lg">
+          {p.title}
+        </h3>
+        <div className="flex items-center justify-between gap-3 text-[11px] font-medium tracking-[0.14em] uppercase text-white/80">
+          <span className="flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-[var(--sky)]" />
+            {p.location}
+          </span>
+          <span className="font-mono">{p.year}</span>
         </div>
       </div>
     </div>

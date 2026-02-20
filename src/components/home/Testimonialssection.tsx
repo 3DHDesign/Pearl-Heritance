@@ -5,8 +5,8 @@ import { Navigation, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import sideSvg from "../../assets/images/side.svg";
 
-// Import Swiper CSS
  
+
 // ── testimonials data ──────────────────────────────────────────────────────
 const testimonials = [
   {
@@ -74,7 +74,7 @@ export default function TestimonialsSection() {
   const swiperRef = useRef<SwiperType | null>(null);
 
   return (
-    <section className="container-wide rounded-3xl relative py-24 bg-[var(--surface)] overflow-hidden">
+    <section className="container-wide relative py-24 bg-[var(--surface)] overflow-hidden">
       <style>{`
         .swiper {
           overflow: visible !important;
@@ -102,18 +102,11 @@ export default function TestimonialsSection() {
           opacity: 0.7 !important;
           transform: scale(0.98) !important;
         }
-        
-        .testimonial-card {
-          height: 100%;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-        }
       `}</style>
 
       {/* Background grid texture */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-30"
+        className="container-wide absolute inset-0 pointer-events-none opacity-30"
         style={{
           backgroundImage: `
             linear-gradient(var(--border) 1px, transparent 1px),
@@ -190,7 +183,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* ── SWIPER ── */}
-        <div className="relative">
+        <div className="relative -mx-4 px-4">
           <Swiper
             modules={[Navigation, Autoplay]}
             onSwiper={(sw) => { swiperRef.current = sw; }}
@@ -209,6 +202,7 @@ export default function TestimonialsSection() {
               900: { slidesPerView: 2.2, spaceBetween: 24 },
               1200:{ slidesPerView: 2.8, spaceBetween: 24 },
             }}
+            className="testimonials-swiper"
           >
             {testimonials.map((t) => (
               <SwiperSlide 
@@ -225,14 +219,14 @@ export default function TestimonialsSection() {
                   <Stars count={t.stars} />
 
                   {/* Quote text */}
-                  <blockquote className="font-body text-[15px] leading-relaxed text-[var(--text)] mb-6 relative z-10">
+                  <blockquote className="font-body text-[15px] leading-relaxed text-[var(--text)] mb-6 relative z-10 line-clamp-4">
                     "{t.quote}"
                   </blockquote>
 
                   {/* Divider with gradient */}
                   <div className="h-px mb-6 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
 
-                  {/* Author section - NO VERIFIED BADGE */}
+                  {/* Author section */}
                   <div className="flex items-center gap-4">
                     {/* Avatar with ring */}
                     <div className="relative flex-shrink-0">
@@ -264,57 +258,8 @@ export default function TestimonialsSection() {
           </Swiper>
         </div>
 
-        {/* ── RATING SUMMARY BAR ── */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-8 md:gap-12 p-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-[var(--border)]">
-          <div className="text-center">
-            <div className="heading-font text-3xl font-bold text-[var(--navy)]">4.9</div>
-            <div className="flex gap-1 justify-center my-1">
-              {[1,2,3,4,5].map(i => (
-                <svg key={i} width="14" height="14" viewBox="0 0 20 20" fill="var(--navy)">
-                  <path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32L2.27 6.62l5.34-.78L10 1z" />
-                </svg>
-              ))}
-            </div>
-            <div className="font-body text-xs text-[var(--muted)]">Average Rating</div>
-          </div>
-
-          <div className="w-px h-12 bg-[var(--border)]" />
-
-          <div className="text-center">
-            <div className="heading-font text-3xl font-bold text-[var(--navy)]">120+</div>
-            <div className="font-body text-xs text-[var(--muted)] mt-1">Happy Clients</div>
-          </div>
-
-          <div className="w-px h-12 bg-[var(--border)]" />
-
-          <div className="text-center">
-            <div className="heading-font text-3xl font-bold text-[var(--navy)]">98%</div>
-            <div className="font-body text-xs text-[var(--muted)] mt-1">Would Recommend</div>
-          </div>
-
-          <div className="w-px h-12 bg-[var(--border)]" />
-
-          <div className="text-center">
-            <div className="heading-font text-3xl font-bold text-[var(--navy)]">15+</div>
-            <div className="font-body text-xs text-[var(--muted)] mt-1">Years Trusted</div>
-          </div>
-        </div>
-
-        {/* Trust indicators */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
-          <span className="text-[10px] tracking-wider uppercase text-[var(--muted)] flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[var(--sky)]" />
-            Trusted by industry leaders
-          </span>
-          <span className="text-[10px] tracking-wider uppercase text-[var(--muted)] flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[var(--sky)]" />
-            Verified reviews
-          </span>
-          <span className="text-[10px] tracking-wider uppercase text-[var(--muted)] flex items-center gap-2">
-            <span className="w-1 h-1 rounded-full bg-[var(--sky)]" />
-            100% confidential
-          </span>
-        </div>
+       
+        
       </div>
     </section>
   );
