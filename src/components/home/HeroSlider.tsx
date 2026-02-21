@@ -6,7 +6,7 @@ import { Autoplay } from "swiper/modules";
 import cornerSvg from "../../assets/images/corner.svg";
 
 // Import Swiper CSS
-import "swiper/css";
+ 
 
 type Slide = {
   id: number;

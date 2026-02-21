@@ -4,7 +4,7 @@ import { useRef } from "react";
 import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper CSS
-import "swiper/css";
+ 
 
 type Service = {
   id: string;

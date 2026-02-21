@@ -105,7 +105,7 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden mt-2 rounded-[34px] bg-white border border-[var(--border)] shadow-lg overflow-hidden animate-in slide-in-from-top duration-300">
             <nav className="flex flex-col p-4">
-              {navItems.map((item, index) => (
+              {navItems.map((item,) => (
                 <NavLink
                   key={item.label}
                   to={item.to}
