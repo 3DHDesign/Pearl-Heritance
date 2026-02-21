@@ -4,7 +4,7 @@ import BlogCard from "../components/blog/BlogCard";
 export default function BlogPage() {
   return (
     <main className="py-16">
-      <div className="container-xxl">
+      <div className="container-wide">
         <div className="max-w-3xl">
           <p className="text-sm tracking-widest uppercase text-[color:var(--muted)]">
             Our Blog
