@@ -7,10 +7,12 @@ import VideoBannerSection from "../components/home/VideoBannerSection"
 
 import ServicesSlider from '../components/home/ServicesSlider'
 import BlogSection from "../components/home/BlogSection"
+import ExpertiseHero from "../components/home/ExpertiseHero"
  
 const Home = () => {
   return (
     <div>
+      <ExpertiseHero/>
          <HeroSlider />
     <ServicesShowcase/> 
     <ProjectsSection/>

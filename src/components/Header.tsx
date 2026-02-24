@@ -15,7 +15,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white py-5">
+    <header className="w-full   py-5 relative z-50">
       <div className="container-wide">
         <div className="@container relative flex items-center justify-between rounded-[34px] bg-white px-8 md:px-12 py-5 overflow-hidden shadow-md border border-[var(--border)]">
           {/* Decorative SVG - Very subtle, just a hint */}

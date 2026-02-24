@@ -11,6 +11,7 @@ import ProjectsLanding from "./pages/ProjectsLanding";
 import ProjectsList from "./pages/ProjectsList";
 import ProjectDetail from "./pages/ProjectDetail";
 import ContactUs from "./pages/ContactUs";
+import WhatsAppButton from "./components/common/WhatsAppButton";
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
 <Route path="/project/:id" element={<ProjectDetail />} />
 
 <Route path="/contact" element={<ContactUs />} />
+
       </Routes>
+      <WhatsAppButton />
       <Footer />
     </>
   );
