@@ -8,11 +8,13 @@ import VideoBannerSection from "../components/home/VideoBannerSection"
 import ServicesSlider from '../components/home/ServicesSlider'
 import BlogSection from "../components/home/BlogSection"
 import ExpertiseHero from "../components/home/ExpertiseHero"
+import ServicesHeroSlider from "../components/home/ServicesHeroSlider"
  
 const Home = () => {
   return (
     <div>
       <ExpertiseHero/>
+      <ServicesHeroSlider/>
          <HeroSlider />
     <ServicesShowcase/> 
     <ProjectsSection/>
