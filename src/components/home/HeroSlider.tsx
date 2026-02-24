@@ -6,11 +6,8 @@ import { Autoplay } from "swiper/modules";
 import cornerSvg from "../../assets/images/corner.svg";
 
 // Import Swiper CSS
-<<<<<<< HEAD
  
-=======
-import "swiper/css";
->>>>>>> cf8c087 (Added Expertise hero section and UI refinements)
+  
 
 type Slide = {
   id: number;
