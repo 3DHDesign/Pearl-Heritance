@@ -54,7 +54,7 @@ export default function AboutIntro() {
             <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { k: "20+", v: "Years" },
-                { k: "120+", v: "Projects" },
+                { k: "250+", v: "Projects" },
                 { k: "6+", v: "Disciplines" },
                 { k: "100%", v: "Professional" },
               ].map((s) => (

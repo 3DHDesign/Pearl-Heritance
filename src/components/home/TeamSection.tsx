@@ -5,9 +5,9 @@ export default function TeamSection() {
   const roles = [
     {
       tag: "01",
-      title: "Chartered\nArchitects",
+      title: "Chartered Architects",
       desc: "Licensed to design, plan and oversee construction of buildings across residential, commercial and civic sectors.",
-      count: "8 members",
+      count: "5 members",
       icon: (
         <svg
           viewBox="0 0 40 40"
@@ -27,7 +27,7 @@ export default function TeamSection() {
     },
     {
       tag: "02",
-      title: "Chartered\nEngineers",
+      title: "Chartered Engineers",
       desc: "Structural and civil specialists ensuring every build meets safety codes and performs with precision.",
       count: "6 members",
       icon: (
@@ -49,9 +49,9 @@ export default function TeamSection() {
     },
     {
       tag: "03",
-      title: "Quantity\nSurveyors",
+      title: "Quantity Surveyors",
       desc: "Managing project costs from initial estimates through to final accounts with full financial transparency.",
-      count: "5 members",
+      count: "4 members",
       icon: (
         <svg
           viewBox="0 0 40 40"
@@ -70,9 +70,9 @@ export default function TeamSection() {
     },
     {
       tag: "04",
-      title: "Project\nManagers",
+      title: "Project Managers",
       desc: "Orchestrating timelines, teams and resources so every project is delivered on time and within scope.",
-      count: "7 members",
+      count: "6 members",
       icon: (
         <svg
           viewBox="0 0 40 40"
@@ -92,7 +92,7 @@ export default function TeamSection() {
     },
     {
       tag: "05",
-      title: "Business\nAdvisors",
+      title: "Business Advisors",
       desc: "Strategic consultants aligning every architectural decision with commercial viability and long-term value.",
       count: "4 members",
       icon: (
@@ -113,9 +113,9 @@ export default function TeamSection() {
     },
     {
       tag: "06",
-      title: "Attorneys\nat Law",
+      title: "Attorneys at Law",
       desc: "Legal experts handling contracts, compliance, land rights and dispute resolution across all project phases.",
-      count: "3 members",
+      count: "2 members",
       icon: (
         <svg
           viewBox="0 0 40 40"

@@ -1,78 +1,103 @@
+// Header.tsx — Pearl Heritance
+// Luxury refined floating navigation
+
 import { NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { FiPhoneCall } from "react-icons/fi";
 import headerShape from "../assets/images/side.svg";
 import logoSvg from "../assets/images/logo.svg";
-import { useState } from "react";
 
 const navItems = [
-  { label: "Home", to: "/" },
-  { label: "About Us", to: "/about" },
-  { label: "Projects", to: "/projects" },
-  { label: "Blogs", to: "/blog" },
+  { label: "Home",       to: "/" },
+  { label: "About Us",   to: "/about" },
+  { label: "Projects",   to: "/projects" },
+  { label: "Blogs",      to: "/blog" },
   { label: "Contact Us", to: "/contact" },
 ];
 
+const PHONE_DISPLAY = "+94 77 772 5999";
+const PHONE_LINK    = "tel:+94777725999";
+
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="w-full   py-5 relative z-50">
-      <div className="container-wide">
-        <div className="@container relative flex items-center justify-between rounded-[34px] bg-white px-8 md:px-12 py-5 overflow-hidden shadow-md border border-[var(--border)]">
-          {/* Decorative SVG - Very subtle, just a hint */}
+    <header className="w-full sticky top-0 z-50 pointer-events-none">
+      <div className="container-wide pt-6 pb-4 pointer-events-auto">
+
+        {/* MAIN BAR */}
+        <div
+          className={[
+            "relative flex items-center justify-between",
+            "rounded-[36px] px-5 md:px-8",
+            scrolled ? "py-2.5" : "py-3",
+            "bg-white border border-[var(--border)]",
+            "overflow-hidden transition-all duration-400",
+            scrolled
+              ? "shadow-[0_8px_40px_rgba(11,45,75,0.12)]"
+              : "shadow-[0_4px_24px_rgba(11,45,75,0.08)]",
+          ].join(" ")}
+        >
+
+          {/* Decorative SVG (shifted further right) */}
           <img
             src={headerShape}
             alt=""
             aria-hidden="true"
-            className="absolute right-0 top-0 h-full object-contain pointer-events-none"
+            className="absolute -right-10 top-0 h-full object-contain pointer-events-none select-none"
             style={{
-              opacity: 0.08,
-              filter: 'brightness(0.5)',
-              mixBlendMode: 'multiply'
+              opacity: 0.07,
+              filter: "brightness(0.4)",
+              mixBlendMode: "multiply",
             }}
           />
 
-          {/* Brand with Logo */}
-          <NavLink to="/" className="relative flex items-center gap-3 group z-10">
-            <div className="relative">
-              <img 
-                src={logoSvg}
-                alt="Pearl Heritance"
-                className="h-11 w-auto object-contain"
-              />
-            </div>
+          {/* Top Accent Stripe */}
+          <div className="absolute top-0 left-6 right-6 h-[2px] rounded-full bg-gradient-to-r from-[var(--navy)] via-[var(--sky)] to-transparent opacity-60" />
 
-            {/* Company Name and Tagline - Hidden on mobile */}
-            <div className="hidden sm:block">
-              <span className="heading-font text-[20px] font-semibold text-[var(--navy)] block leading-tight">
-                Pearl H
-              </span>
-              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-[var(--muted)] block">
-                Bridging Vision and Development
-              </span>
-            </div>
+          {/* LEFT: Logo */}
+          <NavLink
+            to="/"
+            onClick={closeMenu}
+            className="relative z-10 flex items-center shrink-0"
+          >
+            <img
+              src={logoSvg}
+              alt="Pearl Heritance"
+              className="h-10 sm:h-11 md:h-12 w-auto object-contain transition-all duration-300 hover:opacity-85"
+            />
           </NavLink>
 
-          {/* Desktop Nav */}
-          <nav className="relative hidden md:flex items-center gap-8 lg:gap-10 z-10">
+          {/* CENTER: Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-1 relative z-10">
             {navItems.map((item) => (
               <NavLink
                 key={item.label}
                 to={item.to}
+                end={item.to === "/"}
                 className={({ isActive }) =>
                   [
-                    "text-[15px] font-medium transition relative",
+                    "relative px-4 py-2 rounded-full text-[14px] font-medium transition-all duration-250",
                     isActive
-                      ? "text-[var(--navy)]"
-                      : "text-[var(--muted)] hover:text-[var(--navy)]",
+                      ? "text-[var(--navy)] bg-[var(--surface)]"
+                      : "text-[var(--muted)] hover:text-[var(--navy)] hover:bg-[var(--surface)]",
                   ].join(" ")
                 }
-                end={item.to === "/"}
               >
                 {({ isActive }) => (
                   <>
                     {item.label}
                     {isActive && (
-                      <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[var(--sky)] to-transparent" />
+                      <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--sky)]" />
                     )}
                   </>
                 )}
@@ -80,59 +105,132 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden relative z-20 h-10 w-10 rounded-full bg-white border border-[var(--border)] flex items-center justify-center text-[var(--navy)] hover:bg-[var(--surface)] transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <line x1="3" y1="3" x2="15" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <line x1="15" y1="3" x2="3" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <line x1="2" y1="5" x2="16" y2="5" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="2" y1="9" x2="16" y2="9" stroke="currentColor" strokeWidth="1.5" />
-                <line x1="2" y1="13" x2="16" y2="13" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            )}
-          </button>
+          {/* RIGHT: Phone + Hamburger */}
+          <div className="relative z-10 flex items-center md:mb-4 gap-2.5">
+
+            {/* Desktop Phone */}
+            <a
+              href={PHONE_LINK}
+              className="
+                hidden md:inline-flex items-center gap-2.5
+                px-5 py-2.5 rounded-full
+                bg-[var(--navy)] text-white text-[13px] font-semibold
+                shadow-[0_4px_16px_rgba(11,45,75,0.22)]
+                transition-all duration-300
+                hover:bg-[var(--sky)] hover:scale-105
+                hover:shadow-[0_6px_24px_rgba(42,167,223,0.3)]
+                active:scale-95
+              "
+            >
+              <FiPhoneCall className="text-[15px] shrink-0" />
+              <span>{PHONE_DISPLAY}</span>
+            </a>
+
+            {/* Mobile Phone */}
+            <a
+              href={PHONE_LINK}
+              className="
+                md:hidden w-10 h-10 rounded-full
+                bg-[var(--navy)] text-white
+                flex items-center justify-center
+                shadow-[0_4px_12px_rgba(11,45,75,0.22)]
+                transition-all duration-300
+                hover:bg-[var(--sky)]
+                active:scale-95
+              "
+              aria-label="Call us"
+            >
+              <FiPhoneCall className="text-[16px]" />
+            </a>
+
+            {/* Hamburger */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+              className="
+                md:hidden w-10 h-10 rounded-full
+                bg-[var(--surface)] border border-[var(--border)]
+                flex flex-col items-center justify-center gap-[5px]
+                transition-all duration-300
+                hover:border-[var(--navy)]
+                active:scale-95
+              "
+            >
+              <span className={[
+                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                menuOpen ? "w-4 rotate-45 translate-y-[6.5px]" : "w-4",
+              ].join(" ")} />
+              <span className={[
+                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                menuOpen ? "opacity-0 w-0" : "w-3",
+              ].join(" ")} />
+              <span className={[
+                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                menuOpen ? "w-4 -rotate-45 -translate-y-[6.5px]" : "w-4",
+              ].join(" ")} />
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu Dropdown */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-2 rounded-[34px] bg-white border border-[var(--border)] shadow-lg overflow-hidden animate-in slide-in-from-top duration-300">
-            <nav className="flex flex-col p-4">
-              {navItems.map((item,) => (
-                <NavLink
-                  key={item.label}
-                  to={item.to}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={({ isActive }) =>
-                    [
-                      "py-4 px-6 text-[15px] font-medium transition relative border-b border-[var(--border)] last:border-0",
-                      isActive
-                        ? "text-[var(--navy)] bg-[var(--surface)]"
-                        : "text-[var(--muted)] hover:text-[var(--navy)] hover:bg-[var(--surface)]",
-                    ].join(" ")
-                  }
-                  end={item.to === "/"}
-                >
-                  {({ isActive }) => (
-                    <div className="flex items-center justify-between">
-                      <span>{item.label}</span>
-                      {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--sky)]" />
-                      )}
-                    </div>
-                  )}
-                </NavLink>
-              ))}
-            </nav>
+        {/* MOBILE DRAWER */}
+        <div
+          className={[
+            "md:hidden mt-2 rounded-[28px] bg-white border border-[var(--border)]",
+            "overflow-hidden transition-all duration-400 origin-top",
+            menuOpen
+              ? "opacity-100 scale-y-100 shadow-[0_16px_48px_rgba(11,45,75,0.14)] max-h-[500px]"
+              : "opacity-0 scale-y-95 max-h-0 pointer-events-none border-transparent",
+          ].join(" ")}
+        >
+          <div className="h-[2px] bg-gradient-to-r from-[var(--navy)] via-[var(--sky)] to-transparent rounded-t-[28px]" />
+
+          <nav className="flex flex-col px-4 py-3">
+            {navItems.map((item, i) => (
+              <NavLink
+                key={item.label}
+                to={item.to}
+                end={item.to === "/"}
+                onClick={closeMenu}
+                className={({ isActive }) =>
+                  [
+                    "flex items-center justify-between px-5 py-4 rounded-[16px] text-[15px] font-medium transition-all duration-200",
+                    i < navItems.length - 1 ? "mb-1" : "",
+                    isActive
+                      ? "bg-[var(--navy)] text-white"
+                      : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--navy)]",
+                  ].join(" ")
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span>{item.label}</span>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--sky)]" />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="px-4 pb-4">
+            <a
+              href={PHONE_LINK}
+              className="
+                flex items-center justify-center gap-2.5
+                w-full py-3.5 rounded-[16px]
+                bg-[var(--navy)] text-white text-[14px] font-semibold
+                transition-all duration-300
+                hover:bg-[var(--sky)]
+                active:scale-95
+              "
+            >
+              <FiPhoneCall className="text-[16px]" />
+              {PHONE_DISPLAY}
+            </a>
           </div>
-        )}
+        </div>
+
       </div>
     </header>
   );

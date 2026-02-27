@@ -2,13 +2,19 @@ import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FiArrowUpRight, FiCheck } from "react-icons/fi";
 
+type Outcome = {
+  label: string;
+  value: string;
+  note?: string;
+};
+
 type Service = {
   id: string;
   kicker: string;
   title: string;
   desc: string;
   bullets: string[];
-  outcomes: { label: string; value: string }[];
+  outcomes: Outcome[];
 };
 
 export default function ServicesGrid() {
@@ -26,7 +32,11 @@ export default function ServicesGrid() {
           "Contractor selection support",
         ],
         outcomes: [
-          { label: "Typical Engagement", value: "2–6 Weeks" },
+          {
+            label: "Typical Engagement",
+            value: "Varies",
+            note: "Depends on the scale and nature of the project.",
+          },
           { label: "Best For", value: "New Builds" },
         ],
       },
@@ -42,7 +52,11 @@ export default function ServicesGrid() {
           "Delivery supervision support",
         ],
         outcomes: [
-          { label: "Typical Engagement", value: "3–12 Months" },
+          {
+            label: "Typical Engagement",
+            value: "Varies",
+            note: "Depends on the scale and nature of the project.",
+          },
           { label: "Best For", value: "Investors" },
         ],
       },
@@ -74,7 +88,11 @@ export default function ServicesGrid() {
           "On-site coordination",
         ],
         outcomes: [
-          { label: "Typical Engagement", value: "3–9 Months" },
+          {
+            label: "Typical Engagement",
+            value: "Varies",
+            note: "Depends on the scale and nature of the project.",
+          },
           { label: "Best For", value: "Turnkey" },
         ],
       },
@@ -90,7 +108,11 @@ export default function ServicesGrid() {
           "Phased execution support",
         ],
         outcomes: [
-          { label: "Typical Engagement", value: "2–12 Weeks" },
+          {
+            label: "Typical Engagement",
+            value: "Varies",
+            note: "Depends on the scale and nature of the project.",
+          },
           { label: "Best For", value: "Existing Homes" },
         ],
       },
@@ -106,7 +128,11 @@ export default function ServicesGrid() {
           "Value maximization strategy",
         ],
         outcomes: [
-          { label: "Typical Engagement", value: "1–4 Weeks" },
+          {
+            label: "Typical Engagement",
+            value: "Varies",
+            note: "Depends on the scale and nature of the project.",
+          },
           { label: "Best For", value: "Commercial" },
         ],
       },
@@ -141,7 +167,7 @@ export default function ServicesGrid() {
 
       {/* Layout */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left: Navigator (different from card grids) */}
+        {/* Left: Navigator */}
         <div className="lg:col-span-5">
           <div className="rounded-[28px] border border-[color:var(--border)] bg-white p-3">
             {services.map((s) => {
@@ -200,7 +226,6 @@ export default function ServicesGrid() {
             })}
           </div>
 
-          {/* small note */}
           <p className="mt-4 text-xs text-[color:var(--muted)]">
             All services backed by 20+ years of industry experience.
           </p>
@@ -209,7 +234,6 @@ export default function ServicesGrid() {
         {/* Right: Detail Panel */}
         <div className="lg:col-span-7">
           <div className="rounded-[32px] border border-[color:var(--border)] bg-white p-7 md:p-9">
-            {/* top row */}
             <div className="flex items-start justify-between gap-6">
               <div>
                 <p className="text-xs tracking-[0.24em] uppercase text-[color:var(--muted)]">
@@ -223,7 +247,6 @@ export default function ServicesGrid() {
                 </p>
               </div>
 
-              {/* badge */}
               <div className="hidden sm:flex flex-col items-end gap-2">
                 <div className="rounded-full border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2">
                   <span className="text-[11px] tracking-[0.22em] uppercase text-[color:var(--navy)]">
@@ -233,10 +256,8 @@ export default function ServicesGrid() {
               </div>
             </div>
 
-            {/* divider */}
             <div className="my-7 h-px bg-[color:var(--border)]/70" />
 
-            {/* bullets + outcomes */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               {/* bullets */}
               <div className="md:col-span-7">
@@ -274,6 +295,12 @@ export default function ServicesGrid() {
                       <p className="mt-1 heading-font text-lg font-semibold text-[color:var(--navy)]">
                         {o.value}
                       </p>
+
+                      {o.note && (
+                        <p className="mt-2 text-xs leading-relaxed text-[color:var(--muted)]">
+                          {o.note}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -293,7 +320,6 @@ export default function ServicesGrid() {
               </div>
             </div>
 
-            {/* bottom accent line (subtle) */}
             <div className="mt-8 h-[2px] w-24 bg-gradient-to-r from-[color:var(--sky)] to-transparent" />
           </div>
         </div>
