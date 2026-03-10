@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import { Autoplay } from "swiper/modules";
-import "swiper/css";
+ 
 
 type ServiceSlide = {
   id: number;
