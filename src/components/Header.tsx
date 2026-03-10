@@ -1,5 +1,5 @@
 // Header.tsx — Pearl Heritance
-// Luxury refined floating navigation
+// Luxury refined floating navigation (tablet-safe)
 
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -16,7 +16,7 @@ const navItems = [
 ];
 
 const PHONE_DISPLAY = "+94 77 772 5999";
-const PHONE_LINK    = "tel:+94777725999";
+const PHONE_LINK = "tel:+94777725999";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,12 +33,11 @@ export default function Header() {
   return (
     <header className="w-full sticky top-0 z-50 pointer-events-none">
       <div className="container-wide pt-6 pb-4 pointer-events-auto">
-
         {/* MAIN BAR */}
         <div
           className={[
             "relative flex items-center justify-between",
-            "rounded-[36px] px-5 md:px-8",
+            "rounded-[36px] px-5 lg:px-8",
             scrolled ? "py-2.5" : "py-3",
             "bg-white border border-[var(--border)]",
             "overflow-hidden transition-all duration-400",
@@ -47,8 +46,7 @@ export default function Header() {
               : "shadow-[0_4px_24px_rgba(11,45,75,0.08)]",
           ].join(" ")}
         >
-
-          {/* Decorative SVG (shifted further right) */}
+          {/* Decorative SVG */}
           <img
             src={headerShape}
             alt=""
@@ -73,12 +71,12 @@ export default function Header() {
             <img
               src={logoSvg}
               alt="Pearl Heritance"
-              className="h-10 sm:h-11 md:h-12 w-auto object-contain transition-all duration-300 hover:opacity-85"
+              className="h-10 sm:h-11 lg:h-12 w-auto object-contain transition-all duration-300 hover:opacity-85"
             />
           </NavLink>
 
-          {/* CENTER: Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1 relative z-10">
+          {/* CENTER: Desktop Nav (ONLY from lg) */}
+          <nav className="hidden lg:flex items-center gap-1 relative z-10">
             {navItems.map((item) => (
               <NavLink
                 key={item.label}
@@ -106,13 +104,12 @@ export default function Header() {
           </nav>
 
           {/* RIGHT: Phone + Hamburger */}
-          <div className="relative z-10 flex items-center md:mb-4 gap-2.5">
-
-            {/* Desktop Phone */}
+          <div className="relative z-10 flex items-center gap-2.5">
+            {/* Desktop Phone (ONLY from lg) */}
             <a
               href={PHONE_LINK}
               className="
-                hidden md:inline-flex items-center gap-2.5
+                hidden lg:inline-flex items-center gap-2.5
                 px-5 py-2.5 rounded-full
                 bg-[var(--navy)] text-white text-[13px] font-semibold
                 shadow-[0_4px_16px_rgba(11,45,75,0.22)]
@@ -123,14 +120,14 @@ export default function Header() {
               "
             >
               <FiPhoneCall className="text-[15px] shrink-0" />
-              <span>{PHONE_DISPLAY}</span>
+              <span className="whitespace-nowrap">{PHONE_DISPLAY}</span>
             </a>
 
-            {/* Mobile Phone */}
+            {/* Mobile/Tablet Phone icon (up to lg) */}
             <a
               href={PHONE_LINK}
               className="
-                md:hidden w-10 h-10 rounded-full
+                lg:hidden w-10 h-10 rounded-full
                 bg-[var(--navy)] text-white
                 flex items-center justify-center
                 shadow-[0_4px_12px_rgba(11,45,75,0.22)]
@@ -143,12 +140,12 @@ export default function Header() {
               <FiPhoneCall className="text-[16px]" />
             </a>
 
-            {/* Hamburger */}
+            {/* Hamburger (mobile + tablet, hide on lg) */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
               className="
-                md:hidden w-10 h-10 rounded-full
+                lg:hidden w-10 h-10 rounded-full
                 bg-[var(--surface)] border border-[var(--border)]
                 flex flex-col items-center justify-center gap-[5px]
                 transition-all duration-300
@@ -156,29 +153,35 @@ export default function Header() {
                 active:scale-95
               "
             >
-              <span className={[
-                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                menuOpen ? "w-4 rotate-45 translate-y-[6.5px]" : "w-4",
-              ].join(" ")} />
-              <span className={[
-                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                menuOpen ? "opacity-0 w-0" : "w-3",
-              ].join(" ")} />
-              <span className={[
-                "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                menuOpen ? "w-4 -rotate-45 -translate-y-[6.5px]" : "w-4",
-              ].join(" ")} />
+              <span
+                className={[
+                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                  menuOpen ? "w-4 rotate-45 translate-y-[6.5px]" : "w-4",
+                ].join(" ")}
+              />
+              <span
+                className={[
+                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                  menuOpen ? "opacity-0 w-0" : "w-3",
+                ].join(" ")}
+              />
+              <span
+                className={[
+                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
+                  menuOpen ? "w-4 -rotate-45 -translate-y-[6.5px]" : "w-4",
+                ].join(" ")}
+              />
             </button>
           </div>
         </div>
 
-        {/* MOBILE DRAWER */}
+        {/* MOBILE/TABLET DRAWER (show up to lg) */}
         <div
           className={[
-            "md:hidden mt-2 rounded-[28px] bg-white border border-[var(--border)]",
+            "lg:hidden mt-2 rounded-[28px] bg-white border border-[var(--border)]",
             "overflow-hidden transition-all duration-400 origin-top",
             menuOpen
-              ? "opacity-100 scale-y-100 shadow-[0_16px_48px_rgba(11,45,75,0.14)] max-h-[500px]"
+              ? "opacity-100 scale-y-100 shadow-[0_16px_48px_rgba(11,45,75,0.14)] max-h-[520px]"
               : "opacity-0 scale-y-95 max-h-0 pointer-events-none border-transparent",
           ].join(" ")}
         >
@@ -230,7 +233,6 @@ export default function Header() {
             </a>
           </div>
         </div>
-
       </div>
     </header>
   );
