@@ -1,7 +1,15 @@
-import { useMemo, useState } from "react";
+ 
+import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
-import { FaFacebookF, FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { FaLocationDot, FaPhone, FaEnvelope } from "react-icons/fa6";
+import { getContactPage } from "../api/contact";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaXTwitter,
+  FaLocationDot,
+  FaPhone,
+  FaEnvelope,
+} from "react-icons/fa6";
 import { HiOutlineArrowUp } from "react-icons/hi";
 
 type FormState = {
@@ -12,6 +20,8 @@ type FormState = {
   message: string;
 };
 
+type ContactData = Awaited<ReturnType<typeof getContactPage>>["data"];
+
 export default function ContactUs() {
   const [form, setForm] = useState<FormState>({
     firstName: "",
@@ -21,50 +31,67 @@ export default function ContactUs() {
     message: "",
   });
 
-  const mapEmbed = useMemo(() => {
-    const address = encodeURIComponent(
-      "No. 253 B, 1/1, Stanley Thilakarathne Road, Nugegoda, Sri Lanka"
-    );
-    return `https://www.google.com/maps?q=${address}&output=embed`;
+  const [contactData, setContactData] = useState<ContactData | null>(null);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      try {
+        const res = await getContactPage();
+        setContactData(res.data);
+      } catch (error) {
+        console.error("Contact API failed:", error);
+      }
+    };
+
+    fetchContact();
   }, []);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  ) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Contact form:", form);
     alert("Message submitted successfully! We'll get back to you soon.");
-    setForm({ firstName: "", lastName: "", email: "", phone: "", message: "" });
+    setForm({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
   };
 
   return (
     <div className="bg-[var(--bg)]">
       <PageHero
         title="Contact Us"
-        bgImage="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=2000&q=80"
+        bgImage={contactData?.hero_image || ""}
         crumbs={[{ label: "Home", to: "/" }, { label: "Contact Us" }]}
       />
 
-      {/* Decorative elements */}
       <div className="absolute left-0 top-96 w-64 h-64 bg-[var(--sky)]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute right-0 bottom-96 w-80 h-80 bg-[var(--navy)]/5 rounded-full blur-3xl pointer-events-none" />
 
       <section className="container-wide mx-auto px-4 py-16 md:py-20 relative z-10">
         <div className="grid lg:grid-cols-3 gap-10 lg:gap-12">
-          
-          {/* LEFT: map + form */}
+
+          {/* LEFT */}
           <div className="lg:col-span-2 space-y-10">
+
             {/* Map */}
             <div className="rounded-2xl overflow-hidden border border-[var(--border)] shadow-lg">
-              <iframe
-                title="Google Map"
-                src={mapEmbed}
-                className="w-full h-[350px] md:h-[400px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+              {contactData?.map_embed_url && (
+                <iframe
+                  title="Google Map"
+                  src={contactData.map_embed_url}
+                  className="w-full h-[350px] md:h-[400px]"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              )}
             </div>
 
             {/* Form */}
@@ -92,7 +119,7 @@ export default function ContactUs() {
                     value={form.firstName}
                     onChange={onChange}
                     placeholder="First Name"
-                    className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 outline-none focus:border-[var(--sky)] focus:ring-1 focus:ring-[var(--sky)] transition-all duration-200 font-body"
+                    className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5"
                     required
                   />
                   <input
@@ -100,7 +127,7 @@ export default function ContactUs() {
                     value={form.lastName}
                     onChange={onChange}
                     placeholder="Last Name"
-                    className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 outline-none focus:border-[var(--sky)] focus:ring-1 focus:ring-[var(--sky)] transition-all duration-200 font-body"
+                    className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5"
                     required
                   />
                 </div>
@@ -111,7 +138,7 @@ export default function ContactUs() {
                   value={form.email}
                   onChange={onChange}
                   placeholder="Email Address"
-                  className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 outline-none focus:border-[var(--sky)] focus:ring-1 focus:ring-[var(--sky)] transition-all duration-200 font-body"
+                  className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5"
                   required
                 />
 
@@ -120,7 +147,7 @@ export default function ContactUs() {
                   value={form.phone}
                   onChange={onChange}
                   placeholder="Phone Number"
-                  className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 outline-none focus:border-[var(--sky)] focus:ring-1 focus:ring-[var(--sky)] transition-all duration-200 font-body"
+                  className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5"
                 />
 
                 <textarea
@@ -129,7 +156,7 @@ export default function ContactUs() {
                   onChange={onChange}
                   placeholder="Your Message"
                   rows={6}
-                  className="w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 py-4 outline-none focus:border-[var(--sky)] focus:ring-1 focus:ring-[var(--sky)] transition-all duration-200 font-body resize-none"
+                  className="w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5 py-4"
                   required
                 />
 
@@ -144,70 +171,63 @@ export default function ContactUs() {
             </div>
           </div>
 
-          {/* RIGHT: details card */}
+          {/* RIGHT */}
           <aside className="lg:col-span-1">
             <div className="sticky top-24">
               <div className="rounded-3xl border border-[var(--border)] bg-white shadow-xl overflow-hidden">
-                {/* Header gradient */}
                 <div className="h-2 bg-gradient-to-r from-[var(--navy)] to-[var(--sky)]" />
-                
                 <div className="p-8 space-y-8">
-                  {/* Email */}
-                  <div className="group">
-                    <p className="text-xs font-medium tracking-wider uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
+
+                  <div>
+                    <p className="text-xs font-medium uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
                       <FaEnvelope className="text-[var(--sky)]" />
                       Email
                     </p>
-                    <a 
-                      href="mailto:info@pearlheritance.com"
-                      className="heading-font text-lg font-semibold text-[var(--navy)] group-hover:text-[var(--sky)] transition-colors"
+                    <a
+                      href={`mailto:${contactData?.contact_details.email}`}
+                      className="heading-font text-lg font-semibold text-[var(--navy)]"
                     >
-                      info@pearlheritance.com
+                      {contactData?.contact_details.email}
                     </a>
                   </div>
 
                   <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
 
-                  {/* Phone */}
-                  <div className="group">
-                    <p className="text-xs font-medium tracking-wider uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
                       <FaPhone className="text-[var(--sky)]" />
                       Contact Us
                     </p>
-                    <a 
-                      href="tel:+94114236952"
-                      className="heading-font text-lg font-semibold text-[var(--navy)] group-hover:text-[var(--sky)] transition-colors"
+                    <a
+                      href={`tel:${contactData?.contact_details.phone}`}
+                      className="heading-font text-lg font-semibold text-[var(--navy)]"
                     >
-                      (+94) 114 23 69 52
+                      {contactData?.contact_details.phone}
                     </a>
                   </div>
 
                   <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
 
-                  {/* Address */}
-                  <div className="group">
-                    <p className="text-xs font-medium tracking-wider uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
+                  <div>
+                    <p className="text-xs font-medium uppercase text-[var(--muted)] mb-2 flex items-center gap-2">
                       <FaLocationDot className="text-[var(--sky)]" />
                       Our Address
                     </p>
-                    <address className="not-italic text-[var(--navy)] font-body leading-relaxed">
-                      No. 253 B, 1/1,<br />
-                      Stanley Thilakarathne Road,<br />
-                      Nugegoda, Sri Lanka.
+                    <address className="not-italic text-[var(--navy)]">
+                      {contactData?.contact_details.address}
                     </address>
                   </div>
 
                   <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
 
-                  {/* Social Media */}
                   <div>
-                    <p className="text-xs font-medium tracking-wider uppercase text-[var(--muted)] mb-4">
+                    <p className="text-xs font-medium uppercase text-[var(--muted)] mb-4">
                       Follow Us
                     </p>
                     <div className="flex gap-3">
-                      <SocialBtn icon={<FaFacebookF />} href="#" />
-                      <SocialBtn icon={<FaInstagram />} href="#" />
-                      <SocialBtn icon={<FaXTwitter />} href="#" />
+                      <SocialBtn icon={<FaFacebookF />} href={contactData?.social_links.facebook || "#"} />
+                      <SocialBtn icon={<FaInstagram />} href={contactData?.social_links.instagram || "#"} />
+                      <SocialBtn icon={<FaXTwitter />} href={contactData?.social_links.linkedin || "#"} />
                     </div>
                   </div>
 
@@ -226,6 +246,7 @@ export default function ContactUs() {
                       Sunday: Closed
                     </p>
                   </div>
+
                 </div>
               </div>
             </div>
@@ -244,6 +265,7 @@ export default function ContactUs() {
             </span>
           </div>
         </div>
+
       </section>
     </div>
   );
@@ -255,12 +277,9 @@ function SocialBtn({ icon, href }: { icon: React.ReactNode; href: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group h-12 w-12 rounded-xl bg-[var(--surface)] border border-[var(--border)] grid place-items-center text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white hover:border-[var(--navy)] transition-all duration-300 shadow-sm hover:shadow-lg"
-      aria-label="social link"
+      className="group h-12 w-12 rounded-xl bg-[var(--surface)] border border-[var(--border)] grid place-items-center text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg"
     >
-      <span className="group-hover:scale-110 transition-transform">
-        {icon}
-      </span>
+      {icon}
     </a>
   );
-}
+} 

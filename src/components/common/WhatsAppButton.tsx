@@ -1,9 +1,32 @@
-import { FaWhatsapp } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaWhatsapp } from "react-icons/fa"; // adjust path as needed
+import { getContactPage } from "../../api/contact";
 
 export default function WhatsAppButton() {
+  const [whatsapp, setWhatsapp] = useState<{
+    number: string;
+    message: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    getContactPage()
+      .then((res) => {
+        setWhatsapp(res.data.header_contact_strip.whatsapp);
+      })
+      .catch(console.error);
+  }, []);
+
+  if (!whatsapp) return null;
+
+  const href = `https://wa.me/${whatsapp.number.replace(/\D/g, "")}${
+    whatsapp.message
+      ? `?text=${encodeURIComponent(whatsapp.message)}`
+      : ""
+  }`;
+
   return (
     <a
-      href="https://wa.me/94773523040"
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="
