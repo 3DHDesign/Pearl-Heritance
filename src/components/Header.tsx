@@ -1,11 +1,9 @@
-// Header.tsx — Pearl Heritance
-// Luxury refined floating navigation (tablet-safe)
-
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { FiPhoneCall } from "react-icons/fi";
 import headerShape from "../assets/images/side.svg";
 import logoSvg from "../assets/images/logo.svg";
+import { getContactPage } from "../api/contact"; // Adjust path as needed
 
 const navItems = [
   { label: "Home",       to: "/" },
@@ -15,20 +13,33 @@ const navItems = [
   { label: "Contact Us", to: "/contact" },
 ];
 
-const PHONE_DISPLAY = "+94 77 772 5999";
-const PHONE_LINK = "tel:+94777725999";
-
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // State for dynamic phone number
+  const [phone, setPhone] = useState("+94 77 772 5999"); // Initial fallback
 
   useEffect(() => {
+    // 1. Handle Scroll
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    // 2. Fetch Phone from API
+    getContactPage()
+      .then((res) => {
+        if (res.data.header_contact_strip.is_active) {
+          setPhone(res.data.header_contact_strip.phone);
+        }
+      })
+      .catch((err) => console.error("Header API Error:", err));
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const closeMenu = () => setMenuOpen(false);
+  
+  // Create safe link for tel:
+  const phoneLink = `tel:${phone.replace(/\s+/g, '')}`;
 
   return (
     <header className="w-full sticky top-0 z-50 pointer-events-none">
@@ -75,7 +86,7 @@ export default function Header() {
             />
           </NavLink>
 
-          {/* CENTER: Desktop Nav (ONLY from lg) */}
+          {/* CENTER: Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1 relative z-10">
             {navItems.map((item) => (
               <NavLink
@@ -105,9 +116,9 @@ export default function Header() {
 
           {/* RIGHT: Phone + Hamburger */}
           <div className="relative z-10 flex items-center gap-2.5">
-            {/* Desktop Phone (ONLY from lg) */}
+            {/* Desktop Phone */}
             <a
-              href={PHONE_LINK}
+              href={phoneLink}
               className="
                 hidden lg:inline-flex items-center gap-2.5
                 px-5 py-2.5 rounded-full
@@ -115,17 +126,17 @@ export default function Header() {
                 shadow-[0_4px_16px_rgba(11,45,75,0.22)]
                 transition-all duration-300
                 hover:bg-[var(--sky)] hover:scale-105
-                hover:shadow-[0_6px_24px_rgba(42,167,223,0.3)]
+                hover:shadow-[0_6_24px_rgba(42,167,223,0.3)]
                 active:scale-95
               "
             >
               <FiPhoneCall className="text-[15px] shrink-0" />
-              <span className="whitespace-nowrap">{PHONE_DISPLAY}</span>
+              <span className="whitespace-nowrap">{phone}</span>
             </a>
 
-            {/* Mobile/Tablet Phone icon (up to lg) */}
+            {/* Mobile/Tablet Phone icon */}
             <a
-              href={PHONE_LINK}
+              href={phoneLink}
               className="
                 lg:hidden w-10 h-10 rounded-full
                 bg-[var(--navy)] text-white
@@ -140,10 +151,9 @@ export default function Header() {
               <FiPhoneCall className="text-[16px]" />
             </a>
 
-            {/* Hamburger (mobile + tablet, hide on lg) */}
+            {/* Hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
               className="
                 lg:hidden w-10 h-10 rounded-full
                 bg-[var(--surface)] border border-[var(--border)]
@@ -153,29 +163,14 @@ export default function Header() {
                 active:scale-95
               "
             >
-              <span
-                className={[
-                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                  menuOpen ? "w-4 rotate-45 translate-y-[6.5px]" : "w-4",
-                ].join(" ")}
-              />
-              <span
-                className={[
-                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                  menuOpen ? "opacity-0 w-0" : "w-3",
-                ].join(" ")}
-              />
-              <span
-                className={[
-                  "block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300",
-                  menuOpen ? "w-4 -rotate-45 -translate-y-[6.5px]" : "w-4",
-                ].join(" ")}
-              />
+              <span className={["block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300", menuOpen ? "w-4 rotate-45 translate-y-[6.5px]" : "w-4"].join(" ")} />
+              <span className={["block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300", menuOpen ? "opacity-0 w-0" : "w-3"].join(" ")} />
+              <span className={["block h-[1.5px] rounded-full bg-[var(--navy)] transition-all duration-300", menuOpen ? "w-4 -rotate-45 -translate-y-[6.5px]" : "w-4"].join(" ")} />
             </button>
           </div>
         </div>
 
-        {/* MOBILE/TABLET DRAWER (show up to lg) */}
+        {/* MOBILE DRAWER */}
         <div
           className={[
             "lg:hidden mt-2 rounded-[28px] bg-white border border-[var(--border)]",
@@ -186,7 +181,6 @@ export default function Header() {
           ].join(" ")}
         >
           <div className="h-[2px] bg-gradient-to-r from-[var(--navy)] via-[var(--sky)] to-transparent rounded-t-[28px]" />
-
           <nav className="flex flex-col px-4 py-3">
             {navItems.map((item, i) => (
               <NavLink
@@ -198,18 +192,14 @@ export default function Header() {
                   [
                     "flex items-center justify-between px-5 py-4 rounded-[16px] text-[15px] font-medium transition-all duration-200",
                     i < navItems.length - 1 ? "mb-1" : "",
-                    isActive
-                      ? "bg-[var(--navy)] text-white"
-                      : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--navy)]",
+                    isActive ? "bg-[var(--navy)] text-white" : "text-[var(--muted)] hover:bg-[var(--surface)] hover:text-[var(--navy)]",
                   ].join(" ")
                 }
               >
                 {({ isActive }) => (
                   <>
                     <span>{item.label}</span>
-                    {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--sky)]" />
-                    )}
+                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[var(--sky)]" />}
                   </>
                 )}
               </NavLink>
@@ -218,7 +208,7 @@ export default function Header() {
 
           <div className="px-4 pb-4">
             <a
-              href={PHONE_LINK}
+              href={phoneLink}
               className="
                 flex items-center justify-center gap-2.5
                 w-full py-3.5 rounded-[16px]
@@ -229,7 +219,7 @@ export default function Header() {
               "
             >
               <FiPhoneCall className="text-[16px]" />
-              {PHONE_DISPLAY}
+              {phone}
             </a>
           </div>
         </div>
