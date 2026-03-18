@@ -8,9 +8,7 @@ import {
   getActiveTestimonials,
   type TestimonialApiItem,
 } from "../../api/testimonials";
-
-import "swiper/css";
-import "swiper/css/navigation";
+ 
 
 type TestimonialCard = {
   id: number;

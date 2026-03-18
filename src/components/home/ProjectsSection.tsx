@@ -6,11 +6,8 @@ import { Autoplay, Pagination } from "swiper/modules";
 import {
   getSelectedWorks,
   type SelectedWorksSection,
-} from "../../api/Selectedworksapi";
-
-import "swiper/css";
-import "swiper/css/pagination";
-
+} from "../../api/selectedworksapi";
+ 
 gsap.registerPlugin(ScrollTrigger);
 
 const IMAGE_BASE = "https://admin.pearlhe.com/storage/";

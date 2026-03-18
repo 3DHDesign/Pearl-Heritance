@@ -65,7 +65,7 @@ export default function ProjectsLanding() {
       <section className="container-wide pb-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-          {categories.map((cat, index) => (
+          {categories.map((cat) => (
             <Link
               key={cat.id}
               to={`/projects/${encodeURIComponent(cat.tag)}`}
