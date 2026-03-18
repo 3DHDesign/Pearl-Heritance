@@ -1,48 +1,40 @@
-// ProjectsShowcase.tsx — Pearl Heritance
-// Light surface bg, sticky scroll, smooth image fade, pure Tailwind 4
-
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
+import {
+  getActiveFeaturedProjects,
+  type FeaturedProjectsSection,
+  type FeaturedProjectItem,
+} from "../../api/featuredProjects";
 
 gsap.registerPlugin(ScrollTrigger);
 
 type Project = {
-  id: number; number: string; title: string;
-  location: string; category: string; description: string; image: string;
+  id: string;
+  number: string;
+  title: string;
+  location: string;
+  category: string;
+  description: string;
+  image: string;
+  projectLink: string | null;
 };
 
-const projects: Project[] = [
-  {
-    id: 1, number: "01",
-    title: "Kensington House", location: "Colombo 07, Sri Lanka",
-    category: "Residential Buildings",
-    description: "Thoughtful residential planning and construction for modern living — spaces that feel calm, premium and practical.",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=80",
-  },
-  {
-    id: 2, number: "02",
-    title: "Serenity Eco Lodge", location: "Galle, Sri Lanka",
-    category: "Tourist Amenities",
-    description: "Sustainable luxury with breathtaking coastal views and eco-conscious material choices throughout.",
-    image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1800&q=80",
-  },
-  {
-    id: 3, number: "03",
-    title: "Heritance Business Hub", location: "Rajagiriya, Sri Lanka",
-    category: "Commercial Buildings",
-    description: "Bold commercial complex delivering purpose-driven spatial planning and modern façades for growing enterprises.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80",
-  },
-  {
-    id: 4, number: "04",
-    title: "The Pearl Penthouse", location: "Colombo 03, Sri Lanka",
-    category: "Interior Design",
-    description: "Curated interior design balancing warmth, texture and function — transforming raw space into a refined experience.",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1800&q=80",
-  },
-];
+function mapProjects(section: FeaturedProjectsSection): Project[] {
+  return section.projects.map((project: FeaturedProjectItem) => ({
+    id: project.id,
+    number: project.number,
+    title: project.title,
+    location: project.location,
+    category: project.tag?.trim() || "Project",
+    description:
+      project.description?.trim() ||
+      "A carefully crafted project that reflects functionality, aesthetics, and lasting value.",
+    image: project.image_url,
+    projectLink: project.project_link,
+  }));
+}
 
 export default function ProjectsShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -50,129 +42,209 @@ export default function ProjectsShowcase() {
   const [imgOpacity, setImgOpacity] = useState(1);
   const prevIndex = useRef(0);
 
+  const [sectionData, setSectionData] = useState<FeaturedProjectsSection | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedProjects = async () => {
+      try {
+        const data = await getActiveFeaturedProjects();
+        if (!data) return;
+
+        setSectionData(data);
+        setProjects(mapProjects(data));
+      } catch (error) {
+        console.error("Failed to fetch featured projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProjects();
+  }, []);
+
   useEffect(() => {
     if (prevIndex.current === activeIndex) return;
+
     setImgOpacity(0);
-    const t = setTimeout(() => { setImgOpacity(1); prevIndex.current = activeIndex; }, 180);
-    return () => clearTimeout(t);
+    const timeout = setTimeout(() => {
+      setImgOpacity(1);
+      prevIndex.current = activeIndex;
+    }, 180);
+
+    return () => clearTimeout(timeout);
   }, [activeIndex]);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !projects.length) return;
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
         end: `+=${projects.length * 85}%`,
-        pin: true, pinSpacing: true, anticipatePin: 1,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
         onUpdate: (self) => {
-          const idx = Math.min(Math.floor(self.progress * projects.length), projects.length - 1);
+          const idx = Math.min(
+            Math.floor(self.progress * projects.length),
+            projects.length - 1
+          );
           setActiveIndex(idx);
         },
       });
     }, sectionRef);
-    return () => { ctx.revert(); ScrollTrigger.getAll().forEach((s) => s.kill()); };
-  }, []);
 
-  const p = projects[activeIndex];
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [projects.length]);
 
   const scrollToProject = (idx: number) => {
-    const st = ScrollTrigger.getAll().find((s) => s.trigger === sectionRef.current);
-    if (!st) return;
-    window.scrollTo({ top: st.start + (st.end - st.start) * (idx / projects.length) + 10, behavior: "smooth" });
+    const trigger = ScrollTrigger.getAll().find(
+      (item) => item.trigger === sectionRef.current
+    );
+
+    if (!trigger || !projects.length) return;
+
+    window.scrollTo({
+      top: trigger.start + ((trigger.end - trigger.start) * idx) / projects.length + 10,
+      behavior: "smooth",
+    });
   };
+
+  if (loading) {
+    return (
+      <section className="relative w-full overflow-hidden" style={{ height: "100vh" }}>
+        <div className="container-wide relative z-10 flex h-full items-center">
+          <div className="grid w-full items-center gap-10 py-10 lg:grid-cols-2 xl:gap-16">
+            <div className="animate-pulse">
+              <div className="mb-7 h-4 w-32 rounded bg-[var(--border)]" />
+              <div className="mb-4 h-10 w-3/4 rounded bg-[var(--border)]" />
+              <div className="mb-9 h-10 w-2/3 rounded bg-[var(--border)]" />
+              <div className="space-y-3">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-20 rounded-2xl bg-[var(--border)]/50"
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="aspect-[4/3] animate-pulse rounded-[24px] bg-[var(--border)]/50" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!sectionData || !projects.length) return null;
+
+  const activeProject = projects[activeIndex];
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full overflow-hidden  "
+      className="relative w-full overflow-hidden"
       style={{ height: "100vh" }}
     >
-
-
-      {/* ── MAIN LAYOUT ── */}
-      <div className="container-wide h-full flex items-center relative z-10">
-        <div className="grid lg:grid-cols-2 gap-10 xl:gap-16 items-center w-full py-10">
-
-          {/* ══ LEFT — info ══ */}
+      <div className="container-wide relative z-10 flex h-full items-center">
+        <div className="grid w-full items-center gap-10 py-10 lg:grid-cols-2 xl:gap-16">
+          {/* LEFT */}
           <div className="flex flex-col justify-center">
-
-            {/* eyebrow */}
-            <div className="flex items-center gap-3 mb-7">
-              <div className="w-7 h-[2px] rounded-full bg-[var(--navy)]" />
-              <span className="text-[11px] font-medium tracking-[0.22em] uppercase text-[var(--navy)] opacity-70">
-                Featured Projects
+            <div className="mb-7 flex items-center gap-3">
+              <div className="h-[2px] w-7 rounded-full bg-[var(--navy)]" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-[var(--navy)] opacity-70">
+                {sectionData.eyebrow}
               </span>
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--sky)] opacity-50" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--sky)] opacity-50" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--sky)]" />
               </span>
             </div>
 
-            {/* heading */}
             <h2 className="heading-font m-0 mb-9 text-[clamp(26px,3.5vw,48px)] font-bold leading-[1.1] text-[var(--navy)]">
-              Beautiful Spaces With
+              {sectionData.title_line1}
               <br />
-              <span className="text-[var(--sky)]">Lasting Appeal</span>
+              <span className="text-[var(--sky)]">{sectionData.title_line2}</span>
             </h2>
 
-            {/* project list */}
-            <div className="flex flex-col gap-1.5 mb-9">
-              {projects.map((proj, idx) => {
+            <div className="mb-9 flex flex-col gap-1.5">
+              {projects.map((project, idx) => {
                 const isActive = idx === activeIndex;
+
                 return (
                   <button
-                    key={proj.id}
+                    key={project.id}
                     type="button"
                     onClick={() => scrollToProject(idx)}
                     className={[
-                      "group relative flex items-center gap-5 px-5 py-4 rounded-2xl text-left cursor-pointer border transition-all duration-350",
+                      "group relative flex cursor-pointer items-center gap-5 rounded-2xl border px-5 py-4 text-left transition-all duration-350",
                       isActive
-                        ? "bg-white border-[var(--border)] shadow-[0_4px_20px_rgba(11,45,75,0.08)]"
-                        : "bg-transparent border-transparent hover:bg-white/60 hover:border-[var(--border)]",
+                        ? "border-[var(--border)] bg-white shadow-[0_4px_20px_rgba(11,45,75,0.08)]"
+                        : "border-transparent bg-transparent hover:border-[var(--border)] hover:bg-white/60",
                     ].join(" ")}
                   >
-                    {/* active left bar */}
                     {isActive && (
-                      <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-gradient-to-b from-[var(--sky)] to-[var(--navy)]" />
+                      <div className="absolute bottom-3 left-0 top-3 w-[3px] rounded-full bg-gradient-to-b from-[var(--sky)] to-[var(--navy)]" />
                     )}
 
-                    {/* number */}
-                    <span className={[
-                      "heading-font text-[22px] font-bold w-10 shrink-0 transition-colors duration-300",
-                      isActive ? "text-[var(--sky)]" : "text-[var(--border)] group-hover:text-[var(--muted)]",
-                    ].join(" ")}>
-                      {proj.number}
+                    <span
+                      className={[
+                        "heading-font w-10 shrink-0 text-[22px] font-bold transition-colors duration-300",
+                        isActive
+                          ? "text-[var(--sky)]"
+                          : "text-[var(--border)] group-hover:text-[var(--muted)]",
+                      ].join(" ")}
+                    >
+                      {project.number}
                     </span>
 
-                    {/* title + location */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className={[
-                        "heading-font m-0 text-[16px] font-semibold leading-tight transition-colors duration-300",
-                        isActive ? "text-[var(--navy)]" : "text-[var(--muted)] group-hover:text-[var(--navy)]",
-                      ].join(" ")}>
-                        {proj.title}
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        className={[
+                          "heading-font m-0 text-[16px] font-semibold leading-tight transition-colors duration-300",
+                          isActive
+                            ? "text-[var(--navy)]"
+                            : "text-[var(--muted)] group-hover:text-[var(--navy)]",
+                        ].join(" ")}
+                      >
+                        {project.title}
                       </h3>
-                      <p className="m-0 text-[11px] text-[var(--muted)] mt-0.5 tracking-wide opacity-70">{proj.location}</p>
+                      <p className="m-0 mt-0.5 text-[11px] tracking-wide text-[var(--muted)] opacity-70">
+                        {project.location}
+                      </p>
                     </div>
 
-                    {/* category pill */}
-                    <span className={[
-                      "hidden sm:block text-[9px] font-medium tracking-[0.14em] uppercase px-3 py-1 rounded-full border whitespace-nowrap transition-all duration-300",
-                      isActive
-                        ? "bg-[var(--sky)] border-[var(--sky)] text-white"
-                        : "border-[var(--border)] text-[var(--muted)] group-hover:border-[var(--sky)]/50",
-                    ].join(" ")}>
-                      {proj.category.split(" ")[0]}
+                    <span
+                      className={[
+                        "hidden whitespace-nowrap rounded-full border px-3 py-1 text-[9px] font-medium uppercase tracking-[0.14em] transition-all duration-300 sm:block",
+                        isActive
+                          ? "border-[var(--sky)] bg-[var(--sky)] text-white"
+                          : "border-[var(--border)] text-[var(--muted)] group-hover:border-[var(--sky)]/50",
+                      ].join(" ")}
+                    >
+                      {project.category.split(" ")[0]}
                     </span>
 
-                    {/* arrow */}
                     <svg
-                      width="13" height="13" viewBox="0 0 16 16" fill="none"
-                      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                      width="13"
+                      height="13"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className={[
                         "shrink-0 transition-all duration-300",
-                        isActive ? "text-[var(--sky)] opacity-100" : "text-[var(--border)] opacity-0 group-hover:opacity-100 group-hover:text-[var(--navy)]",
+                        isActive
+                          ? "text-[var(--sky)] opacity-100"
+                          : "text-[var(--border)] opacity-0 group-hover:text-[var(--navy)] group-hover:opacity-100",
                       ].join(" ")}
                     >
                       <path d="M3 13L13 3M13 3H6M13 3V10" />
@@ -182,83 +254,95 @@ export default function ProjectsShowcase() {
               })}
             </div>
 
-            {/* footer row */}
             <div className="flex items-center justify-between">
               <Link
-                to="/projects"
+                to={sectionData.view_all_link ?? "/projects"}
                 className="
-                  heading-font no-underline
-                  inline-flex items-center gap-2.5
-                  px-6 py-3 rounded-full
-                  bg-[var(--navy)] text-white text-[13px] font-semibold
+                  heading-font inline-flex items-center gap-2.5 rounded-full
+                  bg-[var(--navy)] px-6 py-3 text-[13px] font-semibold text-white no-underline
                   shadow-[0_4px_16px_rgba(11,45,75,0.22)]
                   transition-all duration-300
-                  hover:bg-[var(--sky)] hover:scale-105
+                  hover:scale-105 hover:bg-[var(--sky)]
                   active:scale-95
                 "
               >
-                View All Projects
-                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                {sectionData.view_all_text}
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
                   <path d="M3 13L13 3M13 3H6M13 3V10" />
                 </svg>
               </Link>
 
-              {/* counter */}
               <div className="flex items-baseline gap-1.5">
-                <span className="heading-font text-[28px] font-bold text-[var(--navy)] leading-none">
+                <span className="heading-font text-[28px] font-bold leading-none text-[var(--navy)]">
                   {String(activeIndex + 1).padStart(2, "0")}
                 </span>
-                <span className="text-[var(--muted)] text-[14px]">/</span>
-                <span className="text-[var(--muted)] text-[14px]">
+                <span className="text-[14px] text-[var(--muted)]">/</span>
+                <span className="text-[14px] text-[var(--muted)]">
                   {String(projects.length).padStart(2, "0")}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ══ RIGHT — image ══ */}
+          {/* RIGHT */}
           <div className="relative">
-            <div className="relative rounded-[24px] overflow-hidden aspect-[4/3] shadow-[0_24px_64px_rgba(11,45,75,0.18)]">
-
-              {projects.map((proj, idx) => (
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_24px_64px_rgba(11,45,75,0.18)]">
+              {projects.map((project, idx) => (
                 <img
-                  key={proj.id}
-                  src={proj.image}
-                  alt={proj.title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  style={{ opacity: idx === activeIndex ? imgOpacity : 0, transition: "opacity 0.35s ease" }}
+                  key={project.id}
+                  src={project.image}
+                  alt={project.title}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  style={{
+                    opacity: idx === activeIndex ? imgOpacity : 0,
+                    transition: "opacity 0.35s ease",
+                  }}
+                  loading="lazy"
                 />
               ))}
 
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy)]/55 via-transparent to-transparent pointer-events-none" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--navy)]/55 via-transparent to-transparent" />
 
-              {/* category badge */}
-              <div className="absolute top-5 left-5 z-20">
-                <div className="flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 rounded-full px-4 py-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--sky)]" />
-                  <span className="text-[10px] font-medium tracking-[0.14em] uppercase text-white">{p.category}</span>
+              <div className="absolute left-5 top-5 z-20">
+                <div className="flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-2 backdrop-blur-md">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--sky)]" />
+                  <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-white">
+                    {activeProject.category}
+                  </span>
                 </div>
               </div>
 
-              {/* number */}
-              <div className="absolute top-5 right-5 z-20">
+              <div className="absolute right-5 top-5 z-20">
                 <span className="heading-font text-[13px] font-semibold text-white/50">
-                  {p.number} / {String(projects.length).padStart(2, "0")}
+                  {activeProject.number} / {String(projects.length).padStart(2, "0")}
                 </span>
               </div>
 
-              {/* bottom info */}
               <div
                 className="absolute bottom-0 left-0 right-0 z-20 p-6"
                 style={{ opacity: imgOpacity, transition: "opacity 0.35s ease" }}
               >
-                <p className="m-0 mb-1 text-[11px] font-medium tracking-wide text-white/55">{p.location}</p>
-                <h3 className="heading-font m-0 mb-2 text-[20px] font-bold text-white leading-tight">{p.title}</h3>
-                <p className="m-0 text-[12px] leading-relaxed text-white/60 max-w-xs">{p.description}</p>
+                <p className="m-0 mb-1 text-[11px] font-medium tracking-wide text-white/55">
+                  {activeProject.location}
+                </p>
+                <h3 className="heading-font m-0 mb-2 text-[20px] font-bold leading-tight text-white">
+                  {activeProject.title}
+                </h3>
+                <p className="m-0 max-w-xs text-[12px] leading-relaxed text-white/60">
+                  {activeProject.description}
+                </p>
               </div>
 
-              {/* progress bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 z-30">
+              <div className="absolute bottom-0 left-0 right-0 z-30 h-[3px] bg-white/10">
                 <div
                   className="h-full bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] transition-all duration-500"
                   style={{ width: `${((activeIndex + 1) / projects.length) * 100}%` }}
@@ -266,18 +350,19 @@ export default function ProjectsShowcase() {
               </div>
             </div>
 
-            {/* dot indicators */}
-            <div className="flex gap-2 mt-4 justify-center">
-              {projects.map((_, i) => (
+            <div className="mt-4 flex justify-center gap-2">
+              {projects.map((_, idx) => (
                 <button
-                  key={i}
+                  key={idx}
                   type="button"
-                  onClick={() => scrollToProject(i)}
+                  onClick={() => scrollToProject(idx)}
                   className={[
-                    "h-1.5 rounded-full transition-all duration-400 border-none cursor-pointer",
-                    i === activeIndex ? "w-8 bg-[var(--sky)]" : "w-3 bg-[var(--border)] hover:bg-[var(--muted)]",
+                    "h-1.5 rounded-full border-none transition-all duration-400",
+                    idx === activeIndex
+                      ? "w-8 bg-[var(--sky)]"
+                      : "w-3 bg-[var(--border)] hover:bg-[var(--muted)]",
                   ].join(" ")}
-                  aria-label={`Go to project ${i + 1}`}
+                  aria-label={`Go to project ${idx + 1}`}
                 />
               ))}
             </div>
@@ -285,14 +370,12 @@ export default function ProjectsShowcase() {
         </div>
       </div>
 
-      {/* right edge progress */}
-      <div className="absolute right-0 top-0 bottom-0 w-1 bg-[var(--border)] z-20">
+      <div className="absolute bottom-0 right-0 top-0 z-20 w-1 bg-[var(--border)]">
         <div
           className="w-full bg-gradient-to-b from-[var(--sky)] to-[var(--navy)] transition-all duration-300"
           style={{ height: `${((activeIndex + 1) / projects.length) * 100}%` }}
         />
       </div>
-
     </section>
   );
 }

@@ -4,9 +4,9 @@ import { useRef } from "react";
 import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper CSS
- 
- 
-  
+
+
+
 
 type Service = {
   id: string;
@@ -116,44 +116,53 @@ export default function ServicesSection() {
             className="!px-2"
           >
             {SERVICES.map((service) => (
-              <SwiperSlide key={service.id}>
+              <SwiperSlide key={service.id} className="!h-auto overflow-visible py-2">
                 {({ isActive }) => (
                   <div
                     className={`
-                      h-full p-6 rounded-xl border transition-all duration-500
-                      ${isActive
-                        ? 'bg-white border-[var(--sky)] shadow-xl scale-[1.02]'
-                        : 'bg-[var(--surface)] border-[var(--border)] hover:bg-white hover:border-[var(--sky)]/50'
+          relative h-full rounded-xl border p-6 transition-all duration-500 overflow-hidden
+          ${isActive
+                        ? "bg-white border-[var(--sky)] shadow-xl scale-[1.01]"
+                        : "bg-[var(--surface)] border-[var(--border)] hover:bg-white hover:border-[var(--sky)]/50"
                       }
-                    `}
+        `}
                   >
                     {/* Number */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`
-                        text-sm font-mono font-medium
-                        ${isActive ? 'text-[var(--sky)]' : 'text-[var(--muted)]'}
-                      `}>
+                    <div className="mb-4 flex items-center justify-between">
+                      <span
+                        className={`
+              text-sm font-mono font-medium
+              ${isActive ? "text-[var(--sky)]" : "text-[var(--muted)]"}
+            `}
+                      >
                         {service.id}
                       </span>
-                      <span className={`
-                        w-8 h-px transition-all duration-500
-                        ${isActive ? 'bg-[var(--sky)] w-12' : 'bg-[var(--border)]'}
-                      `} />
+
+                      <span
+                        className={`
+              h-px transition-all duration-500
+              ${isActive ? "w-12 bg-[var(--sky)]" : "w-8 bg-[var(--border)]"}
+            `}
+                      />
                     </div>
 
                     {/* Title */}
-                    <h3 className={`
-                      heading-font text-lg md:text-xl font-semibold mb-3 transition-colors
-                      ${isActive ? 'text-[var(--navy)]' : 'text-[var(--text)]'}
-                    `}>
+                    <h3
+                      className={`
+            heading-font mb-3 text-lg font-semibold transition-colors md:text-xl
+            ${isActive ? "text-[var(--navy)]" : "text-[var(--text)]"}
+          `}
+                    >
                       {service.title}
                     </h3>
 
                     {/* Description */}
-                    <p className={`
-                      text-sm leading-relaxed transition-colors
-                      ${isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'}
-                    `}>
+                    <p
+                      className={`
+            text-sm leading-relaxed transition-colors
+            ${isActive ? "text-[var(--text)]" : "text-[var(--muted)]"}
+          `}
+                    >
                       {service.desc}
                     </p>
 

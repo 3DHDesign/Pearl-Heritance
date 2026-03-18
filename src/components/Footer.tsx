@@ -1,16 +1,14 @@
-// Footer.tsx — Pearl Heritance
-// Light --surface card bg, Tailwind 4, --navy/--sky/--border vars, Outfit + Inter
-// Uses NavLink from react-router-dom + react-icons/fa6
-
+import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import footerShape from "../assets/images/side.svg";
-import logo from "../assets/images/logo.svg"; // ✅ your actual logo
+import logo from "../assets/images/logo.svg";
 import {
   FaFacebookF,
   FaInstagram,
-  FaXTwitter,
   FaLinkedinIn,
+  FaTiktok,
 } from "react-icons/fa6";
+import { getContactPage, type ContactPageResponse } from "../api/contact";
 
 const pageLinks = [
   { label: "Home", to: "/" },
@@ -18,20 +16,6 @@ const pageLinks = [
   { label: "Projects", to: "/projects" },
   { label: "Blog", to: "/blog" },
   { label: "Contact Us", to: "/contact" },
-];
-
-const usefulLinks = [
-  { label: "Style Guide", to: "/style-guide" },
-  { label: "License", to: "/license" },
-  { label: "Changelog", to: "/changelog" },
-  { label: "Privacy Policy", to: "/privacy" },
-];
-
-const socials = [
-  { label: "Facebook", href: "#", Icon: FaFacebookF },
-  { label: "Instagram", href: "#", Icon: FaInstagram },
-  { label: "LinkedIn", href: "#", Icon: FaLinkedinIn },
-  { label: "X", href: "#", Icon: FaXTwitter },
 ];
 
 function FooterLink({
@@ -73,17 +57,84 @@ function FooterLink({
   );
 }
 
+type SocialItem = {
+  label: string;
+  href: string;
+  Icon: React.ComponentType<{ size?: number }>;
+};
+
 export default function Footer() {
+  const [contactData, setContactData] = useState<ContactPageResponse["data"] | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      try {
+        const response = await getContactPage();
+        setContactData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch footer contact data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFooterData();
+  }, []);
+
+  const socials = useMemo<SocialItem[]>(() => {
+    if (!contactData?.social_links?.is_active) return [];
+
+    const items: SocialItem[] = [];
+
+    if (contactData.social_links.facebook) {
+      items.push({
+        label: "Facebook",
+        href: contactData.social_links.facebook,
+        Icon: FaFacebookF,
+      });
+    }
+
+    if (contactData.social_links.instagram) {
+      items.push({
+        label: "Instagram",
+        href: contactData.social_links.instagram,
+        Icon: FaInstagram,
+      });
+    }
+
+    if (contactData.social_links.linkedin) {
+      items.push({
+        label: "LinkedIn",
+        href: contactData.social_links.linkedin,
+        Icon: FaLinkedinIn,
+      });
+    }
+
+    if (contactData.social_links.tiktok) {
+      items.push({
+        label: "TikTok",
+        href: contactData.social_links.tiktok,
+        Icon: FaTiktok,
+      });
+    }
+
+    return items;
+  }, [contactData]);
+
+  const email = contactData?.contact_details?.email || "info@pearlheritance.com";
+  const phone = contactData?.contact_details?.phone || "+94 77 000 0000";
+  const address = contactData?.contact_details?.address || "Colombo, Sri Lanka";
+
   return (
     <footer className="py-10 md:py-14">
       <div className="container-wide">
-        {/* ── outer rounded card ── */}
-        <div className="relative overflow-hidden rounded-[40px] bg-[color:var(--surface)] px-6 md:px-14 py-12 md:py-16">
-          {/* ── decorative SVG top-right ── */}
+        <div className="relative overflow-hidden rounded-[40px] bg-[color:var(--surface)] px-6 py-12 md:px-14 md:py-16">
+          {/* decorative */}
           <img
             src={footerShape}
             aria-hidden="true"
-            className="absolute right-[-40px] top-[-10px] w-[clamp(200px,30vw,480px)] pointer-events-none select-none z-0"
+            className="pointer-events-none absolute right-[-40px] top-[-10px] z-0 w-[clamp(200px,30vw,480px)] select-none"
             style={{
               filter: "brightness(2.5) contrast(0.8) saturate(0)",
               mixBlendMode: "screen",
@@ -91,97 +142,81 @@ export default function Footer() {
             }}
           />
 
-          {/* ── soft sky bloom top-left ── */}
-          <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full bg-[color:var(--sky)]/10 blur-[70px] pointer-events-none" />
+          <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[color:var(--sky)]/10 blur-[70px]" />
 
-          {/* ══════════ BRAND ROW ══════════ */}
-          <div className="relative z-10 flex flex-col items-center gap-4 mb-12">
-            {/* logo lockup with actual logo.svg */}
+          {/* brand row */}
+          <div className="relative z-10 mb-12 flex flex-col items-center gap-4">
             <NavLink to="/" className="flex items-center gap-3 no-underline">
               <img
                 src={logo}
                 alt="Pearl Heritance"
                 className="h-11 w-auto object-contain"
               />
-              <span className="heading-font text-[22px] font-bold text-[color:var(--navy)] tracking-tight">
+              <span className="heading-font text-[22px] font-bold tracking-tight text-[color:var(--navy)]">
                 Pearl Heritance
               </span>
             </NavLink>
 
-            {/* tagline */}
-            <p className="text-[14px] text-[color:var(--muted)] text-center max-w-xs leading-relaxed">
+            <p className="max-w-xs text-center text-[14px] leading-relaxed text-[color:var(--muted)]">
               Building comfortable futures with precision, craft, and timeless design.
             </p>
 
-            {/* thin navy accent line */}
-            <div className="w-12 h-[2px] rounded-full bg-gradient-to-r from-[color:var(--navy)] to-[color:var(--sky)]" />
+            <div className="h-[2px] w-12 rounded-full bg-gradient-to-r from-[color:var(--navy)] to-[color:var(--sky)]" />
           </div>
 
-          {/* ══════════ MAIN GRID ══════════ */}
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8">
-            {/* ── col 1 ── */}
-            <div className="lg:col-span-5 flex flex-col justify-between gap-8">
-              <h3 className="heading-font text-[clamp(24px,3vw,36px)] font-bold text-[color:var(--navy)] leading-[1.2] max-w-sm">
+          {/* main grid */}
+          <div className="relative z-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8">
+            {/* left */}
+            <div className="flex flex-col justify-between gap-8 lg:col-span-6">
+              <h3 className="heading-font max-w-sm text-[clamp(24px,3vw,36px)] font-bold leading-[1.2] text-[color:var(--navy)]">
                 We build a comfortable future{" "}
                 <span className="text-[color:var(--sky)]">for our clients.</span>
               </h3>
 
-              <div>
-                <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[color:var(--muted)] mb-4">
-                  Follow Us
-                </p>
+              {!loading && socials.length > 0 && (
+                <div>
+                  <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
+                    Follow Us
+                  </p>
 
-                <div className="flex gap-2.5">
-                  {socials.map(({ label, href, Icon }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      aria-label={label}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="
-                        w-10 h-10 rounded-full
-                        bg-white border border-[color:var(--border)]
-                        text-[color:var(--navy)] flex items-center justify-center
-                        shadow-[0_2px_8px_rgba(11,45,75,0.08)]
-                        transition-all duration-300
-                        hover:bg-[color:var(--navy)] hover:border-[color:var(--navy)] hover:text-white
-                        hover:shadow-[0_4px_16px_rgba(11,45,75,0.22)] hover:scale-110
-                        active:scale-95
-                      "
-                    >
-                      <Icon size={14} />
-                    </a>
-                  ))}
+                  <div className="flex gap-2.5">
+                    {socials.map(({ label, href, Icon }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        aria-label={label}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="
+                          flex h-10 w-10 items-center justify-center rounded-full
+                          border border-[color:var(--border)] bg-white
+                          text-[color:var(--navy)]
+                          shadow-[0_2px_8px_rgba(11,45,75,0.08)]
+                          transition-all duration-300
+                          hover:scale-110 hover:border-[color:var(--navy)] hover:bg-[color:var(--navy)] hover:text-white
+                          hover:shadow-[0_4px_16px_rgba(11,45,75,0.22)]
+                          active:scale-95
+                        "
+                      >
+                        <Icon size={14} />
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
-            {/* ── col 2 ── */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {/* right */}
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:col-span-6">
               {/* page links */}
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[color:var(--muted)] mb-5">
+                <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
                   Page Links
                 </p>
-                <ul className="flex flex-col gap-3 list-none p-0 m-0">
-                  {pageLinks.map((l) => (
-                    <li key={l.label}>
-                      <FooterLink to={l.to} label={l.label} end={l.to === "/"} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* useful links */}
-              <div>
-                <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[color:var(--muted)] mb-5">
-                  Useful Links
-                </p>
-                <ul className="flex flex-col gap-3 list-none p-0 m-0">
-                  {usefulLinks.map((l) => (
-                    <li key={l.label}>
-                      <FooterLink to={l.to} label={l.label} />
+                <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                  {pageLinks.map((link) => (
+                    <li key={link.label}>
+                      <FooterLink to={link.to} label={link.label} end={link.to === "/"} />
                     </li>
                   ))}
                 </ul>
@@ -189,24 +224,24 @@ export default function Footer() {
 
               {/* contact */}
               <div>
-                <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[color:var(--muted)] mb-5">
+                <p className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
                   Say Hello
                 </p>
 
                 <div className="flex flex-col gap-5">
                   <div>
-                    <p className="m-0 mb-1 text-[10px] font-medium tracking-[0.12em] uppercase text-[color:var(--muted)]/70">
+                    <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[color:var(--muted)]/70">
                       Email
                     </p>
                     <a
-                      href="mailto:info@pearlheritance.com"
+                      href={`mailto:${email}`}
                       className="
+                        group inline-flex items-center gap-1.5
                         text-[14px] text-[color:var(--text)]/70 no-underline
-                        hover:text-[color:var(--navy)] transition-colors duration-200
-                        inline-flex items-center gap-1.5 group
+                        transition-colors duration-200 hover:text-[color:var(--navy)]
                       "
                     >
-                      info@pearlheritance.com
+                      {email}
                       <svg
                         width="11"
                         height="11"
@@ -216,7 +251,7 @@ export default function Footer() {
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        className="opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200"
+                        className="opacity-0 -translate-x-1 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
                       >
                         <path d="M3 13L13 3M13 3H6M13 3V10" />
                       </svg>
@@ -224,26 +259,23 @@ export default function Footer() {
                   </div>
 
                   <div>
-                    <p className="m-0 mb-1 text-[10px] font-medium tracking-[0.12em] uppercase text-[color:var(--muted)]/70">
+                    <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[color:var(--muted)]/70">
                       Contact Us
                     </p>
                     <a
-                      href="tel:+94770000000"
-                      className="
-                        text-[14px] text-[color:var(--text)]/70 no-underline
-                        hover:text-[color:var(--navy)] transition-colors duration-200
-                      "
+                      href={`tel:${phone.replace(/\s+/g, "")}`}
+                      className="text-[14px] text-[color:var(--text)]/70 no-underline transition-colors duration-200 hover:text-[color:var(--navy)]"
                     >
-                      +94 77 000 0000
+                      {phone}
                     </a>
                   </div>
 
                   <div>
-                    <p className="m-0 mb-1 text-[10px] font-medium tracking-[0.12em] uppercase text-[color:var(--muted)]/70">
+                    <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[color:var(--muted)]/70">
                       Location
                     </p>
-                    <p className="m-0 text-[14px] text-[color:var(--text)]/70 leading-snug">
-                      Colombo, Sri Lanka
+                    <p className="m-0 text-[14px] leading-snug text-[color:var(--text)]/70">
+                      {address}
                     </p>
                   </div>
                 </div>
@@ -251,31 +283,25 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ══════════ BOTTOM BAR ══════════ */}
-          <div className="relative z-10 mt-12 pt-7 border-t border-black/[0.07] flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="m-0 text-[13px] text-[color:var(--muted)] text-center sm:text-left">
+          {/* bottom bar */}
+          <div className="relative z-10 mt-12 flex flex-col items-center justify-between gap-3 border-t border-black/[0.07] pt-7 sm:flex-row">
+            <p className="m-0 text-center text-[13px] text-[color:var(--muted)] sm:text-left">
               © {new Date().getFullYear()} Pearl Heritance. All rights reserved.
             </p>
-
-            <div className="flex items-center gap-5">
-              <FooterLink to="/privacy-policy" label="Privacy Policy" />
-              <FooterLink to="/terms-of-use" label="Terms of Use" />
-            </div>
           </div>
 
-          {/* ── scroll to top ── */}
+          {/* scroll to top */}
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             aria-label="Scroll to top"
             className="
-              absolute right-6 bottom-6 z-10
-              w-11 h-11 rounded-full
+              absolute bottom-6 right-6 z-10
+              flex h-11 w-11 items-center justify-center rounded-full
               bg-[color:var(--navy)] text-white
-              flex items-center justify-center
               shadow-[0_4px_16px_rgba(11,45,75,0.30)]
               transition-all duration-300
-              hover:bg-[color:var(--sky)] hover:scale-110
+              hover:scale-110 hover:bg-[color:var(--sky)]
               hover:shadow-[0_6px_20px_rgba(42,167,223,0.35)]
               active:scale-95
             "

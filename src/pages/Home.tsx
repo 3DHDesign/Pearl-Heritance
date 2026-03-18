@@ -1,4 +1,4 @@
-import HeroSlider from "../components/home/HeroSlider"
+ 
 import ProjectsSection from "../components/home/ProjectsSection"
 import ServicesShowcase from "../components/home/ServicesShowcase"
 import TeamSection from "../components/home/TeamSection"
@@ -15,8 +15,8 @@ const Home = () => {
     <div>
       <ExpertiseHero/>
       <ServicesHeroSlider/>
-         <HeroSlider />
-    <ServicesShowcase/> 
+         {/* <HeroSlider /> */}
+     <ServicesShowcase/>  
     <ProjectsSection/>
     <ServicesSlider />
     <VideoBannerSection/>

@@ -1,170 +1,270 @@
-// src/components/about/TeamSection.tsx
-// Tailwind-only (uses your global tokens + container-wide). No inline <style> blocks.
+import { useEffect, useState } from "react";
+import {
+  getExpertTeamSections,
+  type ExpertTeamItem,
+} from "../../api/expertTeam";
 
-export default function TeamSection() {
-  const roles = [
-    {
-      tag: "01",
-      title: "Chartered Architects",
-      desc: "Licensed to design, plan and oversee construction of buildings across residential, commercial and civic sectors.",
-      count: "5 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <rect x="5" y="8" width="30" height="22" rx="2" />
-          <path d="M14 30v4M26 30v4M10 34h20" />
-          <path d="M11 14h18M11 19h12" />
-          <path d="M25 22l4 4" />
-        </svg>
-      ),
-    },
-    {
-      tag: "02",
-      title: "Chartered Engineers",
-      desc: "Structural and civil specialists ensuring every build meets safety codes and performs with precision.",
-      count: "6 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <circle cx="20" cy="20" r="12" />
-          <path d="M20 8v4M20 28v4M8 20h4M28 20h4" />
-          <path d="M20 20l5-5" />
-          <circle cx="20" cy="20" r="2.5" fill="currentColor" stroke="none" />
-        </svg>
-      ),
-    },
-    {
-      tag: "03",
-      title: "Quantity Surveyors",
-      desc: "Managing project costs from initial estimates through to final accounts with full financial transparency.",
-      count: "4 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <path d="M8 32L20 10l12 22H8z" />
-          <path d="M14 32v-6h12v6" />
-          <path d="M17 26v-4h6v4" />
-        </svg>
-      ),
-    },
-    {
-      tag: "04",
-      title: "Project Managers",
-      desc: "Orchestrating timelines, teams and resources so every project is delivered on time and within scope.",
-      count: "6 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <rect x="7" y="12" width="26" height="20" rx="2" />
-          <path d="M14 12V9a6 6 0 0112 0v3" />
-          <circle cx="20" cy="22" r="3" />
-          <path d="M20 25v4" />
-        </svg>
-      ),
-    },
-    {
-      tag: "05",
-      title: "Business Advisors",
-      desc: "Strategic consultants aligning every architectural decision with commercial viability and long-term value.",
-      count: "4 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <path d="M10 30V16l10-8 10 8v14" />
-          <rect x="16" y="22" width="8" height="8" />
-          <path d="M6 16l14-12 14 12" />
-        </svg>
-      ),
-    },
-    {
-      tag: "06",
-      title: "Attorneys at Law",
-      desc: "Legal experts handling contracts, compliance, land rights and dispute resolution across all project phases.",
-      count: "2 members",
-      icon: (
-        <svg
-          viewBox="0 0 40 40"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-6 w-6"
-        >
-          <rect x="8" y="6" width="24" height="30" rx="2" />
-          <path d="M13 14h14M13 19h14M13 24h8" />
-          <circle cx="28" cy="28" r="6" className="fill-[color:var(--navy)] stroke-[color:var(--navy)]" />
-          <path d="M26 28l1.5 1.5L30 26" stroke="#fff" strokeWidth="1.5" />
-        </svg>
-      ),
-    },
-  ];
- 
+function TeamIcon({ title }: { title: string }) {
+  const normalized = title.toLowerCase();
+
+  if (normalized.includes("architect")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <rect x="5" y="8" width="30" height="22" rx="2" />
+        <path d="M14 30v4M26 30v4M10 34h20" />
+        <path d="M11 14h18M11 19h12" />
+        <path d="M25 22l4 4" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("engineer")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <circle cx="20" cy="20" r="12" />
+        <path d="M20 8v4M20 28v4M8 20h4M28 20h4" />
+        <path d="M20 20l5-5" />
+        <circle cx="20" cy="20" r="2.5" fill="currentColor" stroke="none" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("quantity")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <path d="M8 32L20 10l12 22H8z" />
+        <path d="M14 32v-6h12v6" />
+        <path d="M17 26v-4h6v4" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("project manager")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <rect x="7" y="12" width="26" height="20" rx="2" />
+        <path d="M14 12V9a6 6 0 0112 0v3" />
+        <circle cx="20" cy="22" r="3" />
+        <path d="M20 25v4" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("business advisor") || normalized.includes("marketing advisor")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <path d="M10 30V16l10-8 10 8v14" />
+        <rect x="16" y="22" width="8" height="8" />
+        <path d="M6 16l14-12 14 12" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("attorney") || normalized.includes("law")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <rect x="8" y="6" width="24" height="30" rx="2" />
+        <path d="M13 14h14M13 19h14M13 24h8" />
+        <circle
+          cx="28"
+          cy="28"
+          r="6"
+          className="fill-[color:var(--navy)] stroke-[color:var(--navy)]"
+        />
+        <path d="M26 28l1.5 1.5L30 26" stroke="#fff" strokeWidth="1.5" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes("property consultant")) {
+    return (
+      <svg
+        viewBox="0 0 40 40"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <path d="M9 31V15l11-8 11 8v16" />
+        <path d="M15 31v-8h10v8" />
+        <path d="M13 18h14" />
+      </svg>
+    );
+  }
 
   return (
-    <section className="py-[90px] pb-[100px] bg-[color:var(--bg)]">
+    <svg
+      viewBox="0 0 40 40"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-6 w-6"
+    >
+      <circle cx="20" cy="14" r="5" />
+      <path d="M10 31c1.8-5 6-8 10-8s8.2 3 10 8" />
+    </svg>
+  );
+}
+
+function formatMembersCount(count: number) {
+  return `${count} member${count === 1 ? "" : "s"}`;
+}
+
+export default function TeamSection() {
+  const [roles, setRoles] = useState<ExpertTeamItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const res = await getExpertTeamSections();
+
+        const activeRoles = res.data
+          .filter((item) => item.is_active)
+          .sort((a, b) => {
+            const numA = parseInt(a.number, 10);
+            const numB = parseInt(b.number, 10);
+            return numA - numB;
+          });
+
+        setRoles(activeRoles);
+      } catch (error) {
+        console.error("Failed to fetch expert team sections:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeam();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-[color:var(--bg)] py-[90px] pb-[100px]">
+        <div className="container-wide">
+          <div className="mx-auto mb-14 max-w-[680px] text-center">
+            <div className="mb-4 inline-flex items-center gap-3">
+              <span className="h-[2px] w-6 rounded-full bg-[color:var(--navy)]/90" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[color:var(--navy)]">
+                Our Team
+              </span>
+              <span className="h-[2px] w-6 rounded-full bg-[color:var(--navy)]/90" />
+            </div>
+
+            <h2 className="heading-font text-[42px] font-semibold leading-[50px] text-[color:var(--navy)] md:text-[46px] md:leading-[54px]">
+              The Experts Behind
+              <br />
+              Every Project
+            </h2>
+
+            <p className="mt-3 text-[16px] leading-[26px] text-[color:var(--muted)] md:text-[18px]">
+              A multidisciplinary team of licensed professionals — each bringing deep expertise to deliver outstanding results.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="animate-pulse overflow-hidden rounded-2xl border border-[color:var(--border)]/70 bg-white p-7"
+              >
+                <div className="mb-5 h-[54px] w-[54px] rounded-xl bg-[color:var(--navy)]/[0.06]" />
+                <div className="h-3 w-10 rounded bg-[color:var(--navy)]/[0.08]" />
+                <div className="mt-3 h-6 w-2/3 rounded bg-[color:var(--navy)]/[0.08]" />
+                <div className="mt-2 h-4 w-full rounded bg-[color:var(--navy)]/[0.06]" />
+                <div className="mt-2 h-4 w-5/6 rounded bg-[color:var(--navy)]/[0.06]" />
+                <div className="mt-6 h-px w-full bg-[color:var(--navy)]/[0.08]" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!roles.length) return null;
+
+  return (
+    <section className="bg-[color:var(--bg)] py-[90px] pb-[100px]">
       <div className="container-wide">
         {/* HEADER */}
-        <div className="mx-auto max-w-[680px] text-center mb-14">
-          <div className="inline-flex items-center gap-3 mb-4">
+        <div className="mx-auto mb-14 max-w-[680px] text-center">
+          <div className="mb-4 inline-flex items-center gap-3">
             <span className="h-[2px] w-6 rounded-full bg-[color:var(--navy)]/90" />
-            <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[color:var(--navy)]">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[color:var(--navy)]">
               Our Team
             </span>
             <span className="h-[2px] w-6 rounded-full bg-[color:var(--navy)]/90" />
           </div>
 
-          <h2 className="heading-font text-[42px] leading-[50px] md:text-[46px] md:leading-[54px] font-semibold text-[color:var(--navy)]">
+          <h2 className="heading-font text-[42px] font-semibold leading-[50px] text-[color:var(--navy)] md:text-[46px] md:leading-[54px]">
             The Experts Behind
             <br />
             Every Project
           </h2>
 
-          <p className="mt-3 text-[16px] md:text-[18px] leading-[26px] text-[color:var(--muted)]">
+          <p className="mt-3 text-[16px] leading-[26px] text-[color:var(--muted)] md:text-[18px]">
             A multidisciplinary team of licensed professionals — each bringing deep expertise to deliver outstanding results.
           </p>
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {roles.map((role) => (
             <div
-              key={role.tag}
+              key={role.id}
               className="
                 group relative overflow-hidden rounded-2xl bg-white
                 border border-[color:var(--border)]/70
@@ -175,7 +275,6 @@ export default function TeamSection() {
                 hover:border-[color:var(--navy)]/90
               "
             >
-              {/* subtle gradient hover wash */}
               <div
                 className="
                   pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100
@@ -184,12 +283,10 @@ export default function TeamSection() {
                 "
               />
 
-              {/* big background number */}
-              <span className="absolute -top-2 right-4 text-[92px] font-semibold leading-none text-[color:var(--navy)]/[0.06] select-none pointer-events-none transition-colors duration-300 group-hover:text-[color:var(--navy)]/[0.10]">
-                {role.tag}
+              <span className="pointer-events-none absolute -top-2 right-4 select-none text-[92px] font-semibold leading-none text-[color:var(--navy)]/[0.06] transition-colors duration-300 group-hover:text-[color:var(--navy)]/[0.10]">
+                {role.number}
               </span>
 
-              {/* icon */}
               <div
                 className="
                   relative z-[1]
@@ -198,32 +295,28 @@ export default function TeamSection() {
                   bg-[color:var(--navy)]/[0.06]
                   text-[color:var(--navy)]
                   transition-all duration-300
-                  group-hover:bg-[color:var(--navy)]
-                  group-hover:border-[color:var(--navy)]
-                  group-hover:text-white
                   group-hover:rotate-[-3deg] group-hover:scale-[1.06]
+                  group-hover:border-[color:var(--navy)]
+                  group-hover:bg-[color:var(--navy)]
+                  group-hover:text-white
                 "
               >
-                {role.icon}
+                <TeamIcon title={role.title} />
               </div>
 
-              {/* tag */}
-              <div className="relative z-[1] text-[10px] font-semibold tracking-[0.18em] uppercase text-[color:var(--sky)]/80">
-                {role.tag}
+              <div className="relative z-[1] text-[10px] font-semibold uppercase tracking-[0.18em] text-[color:var(--sky)]/80">
+                {role.number}
               </div>
 
-              {/* title */}
-              <h3 className="relative z-[1] heading-font mt-1 text-[22px] leading-[30px] font-semibold text-[color:var(--navy)] whitespace-pre-line">
+              <h3 className="heading-font relative z-[1] mt-1 whitespace-pre-line text-[22px] font-semibold leading-[30px] text-[color:var(--navy)]">
                 {role.title}
               </h3>
 
-              {/* desc */}
-              <p className="relative z-[1] mt-2 text-[14px] leading-[22px] text-[color:var(--muted)]">
-                {role.desc}
+              <p className="relative z-[1] mt-2 min-h-[66px] text-[14px] leading-[22px] text-[color:var(--muted)]">
+                {role.description ?? "Specialized expertise supporting the successful delivery of high-value projects."}
               </p>
 
-              {/* footer */}
-              <div className="relative z-[1] mt-5 pt-4 border-t border-[color:var(--navy)]/10 flex items-center justify-between">
+              <div className="relative z-[1] mt-5 flex items-center justify-between border-t border-[color:var(--navy)]/10 pt-4">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-[3px]">
                     <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--sky)] opacity-100" />
@@ -231,19 +324,18 @@ export default function TeamSection() {
                     <span className="h-[6px] w-[6px] rounded-full bg-[color:var(--sky)] opacity-40" />
                   </div>
                   <span className="text-[11px] font-medium tracking-[0.08em] text-[color:var(--muted)]">
-                    {role.count}
+                    {formatMembersCount(role.members_count)}
                   </span>
                 </div>
 
                 <div
                   className="
-                    h-8 w-8 rounded-full border border-[color:var(--navy)]/20
-                    grid place-items-center
+                    grid h-8 w-8 place-items-center rounded-full border border-[color:var(--navy)]/20
                     text-[color:var(--navy)]
                     opacity-0 -translate-x-1
                     transition-all duration-300
-                    group-hover:opacity-100 group-hover:translate-x-0
-                    hover:bg-[color:var(--navy)] hover:text-white hover:border-[color:var(--navy)]
+                    group-hover:translate-x-0 group-hover:opacity-100
+                    hover:border-[color:var(--navy)] hover:bg-[color:var(--navy)] hover:text-white
                   "
                   aria-hidden="true"
                 >
@@ -260,12 +352,11 @@ export default function TeamSection() {
                 </div>
               </div>
 
-              {/* bottom active line */}
               <div
                 className="
                   absolute bottom-0 left-0 right-0 h-[3px]
-                  bg-[linear-gradient(90deg,var(--navy)_0%,var(--sky)_100%)]
                   origin-left scale-x-0
+                  bg-[linear-gradient(90deg,var(--navy)_0%,var(--sky)_100%)]
                   transition-transform duration-300
                   group-hover:scale-x-100
                 "
@@ -273,9 +364,6 @@ export default function TeamSection() {
             </div>
           ))}
         </div>
-
-        {/* STATS BAR */}
-     
       </div>
     </section>
   );
