@@ -59,7 +59,7 @@ try {
     $mail->Host = 'mail.pearlhe.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'info@pearlhe.com';
-    $mail->Password = 'YOUR_EMAIL_PASSWORD';
+    $mail->Password = 'Peralinfo@123';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
     $mail->Port = 465;
 
