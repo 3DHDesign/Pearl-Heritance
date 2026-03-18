@@ -27,8 +27,7 @@ export default function ServicesHeroSlider() {
       <div className="container-wide pt-10">
         <div className="overflow-hidden rounded-[34px] border border-[var(--border)] bg-white shadow-md">
           {/* TOP: Service tabs */}
-          {/* TOP: Service tabs */}
-<div className="hidden md:block px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
+          <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
             <div className="mb-4 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[var(--sky)]" />
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--muted)]">

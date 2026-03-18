@@ -51,18 +51,38 @@ export default function ContactUs() {
   ) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Contact form:", form);
-    alert("Message submitted successfully! We'll get back to you soon.");
-    setForm({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
-  };
+    const submit = async (e: React.FormEvent) => {
+      e.preventDefault();
+    
+      try {
+        const res = await fetch("/sendemail.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+    
+        const data = await res.json();
+    
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || "Failed to send message");
+        }
+    
+        alert("Message submitted successfully! We'll get back to you soon.");
+    
+        setForm({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } catch (error) {
+        console.error("Contact form send failed:", error);
+        alert("Failed to send message. Please try again.");
+      }
+    };
 
   return (
     <div className="bg-[var(--bg)]">
