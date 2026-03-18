@@ -55,7 +55,7 @@ export default function ContactUs() {
       e.preventDefault();
     
       try {
-        const res = await fetch("/sendemail.php", {
+        const res = await fetch("/sendeMail.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
