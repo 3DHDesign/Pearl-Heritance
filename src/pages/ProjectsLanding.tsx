@@ -10,14 +10,19 @@ export default function ProjectsLanding() {
     const fetchCategories = async () => {
       try {
         const data = await getProjectCategories();
-        setCategories(data);
+  
+        const sorted = [...data].sort(
+          (a, b) => Number(a.number) - Number(b.number)
+        );
+  
+        setCategories(sorted);
       } catch (err) {
         console.error("Failed to load categories", err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchCategories();
   }, []);
 
