@@ -1,5 +1,4 @@
-// TestimonialsSection.tsx
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
@@ -8,7 +7,6 @@ import {
   getActiveTestimonials,
   type TestimonialApiItem,
 } from "../../api/testimonials";
- 
 
 type TestimonialCard = {
   id: number;
@@ -74,6 +72,46 @@ export default function TestimonialsSection() {
     loadTestimonials();
   }, []);
 
+  const count = testimonials.length;
+  const hasMultiple = count > 1;
+  const canLoop = count >= 4;
+
+  const breakpoints = useMemo(() => {
+    if (count <= 1) {
+      return {
+        0: { slidesPerView: 1, spaceBetween: 0 },
+      };
+    }
+
+    if (count === 2) {
+      return {
+        0: { slidesPerView: 1, spaceBetween: 14 },
+        640: { slidesPerView: 1, spaceBetween: 16 },
+        768: { slidesPerView: 1.2, spaceBetween: 18 },
+        1024: { slidesPerView: 1.5, spaceBetween: 20 },
+        1280: { slidesPerView: 1.6, spaceBetween: 20 },
+      };
+    }
+
+    if (count === 3) {
+      return {
+        0: { slidesPerView: 1, spaceBetween: 14 },
+        640: { slidesPerView: 1.1, spaceBetween: 16 },
+        768: { slidesPerView: 1.4, spaceBetween: 20 },
+        1024: { slidesPerView: 1.8, spaceBetween: 24 },
+        1280: { slidesPerView: 2.2, spaceBetween: 24 },
+      };
+    }
+
+    return {
+      0: { slidesPerView: 1, spaceBetween: 14 },
+      640: { slidesPerView: 1.15, spaceBetween: 16 },
+      768: { slidesPerView: 1.5, spaceBetween: 20 },
+      1024: { slidesPerView: 2.2, spaceBetween: 24 },
+      1280: { slidesPerView: 2.8, spaceBetween: 24 },
+    };
+  }, [count]);
+
   return (
     <section className="container-wide relative overflow-x-hidden bg-[var(--surface)] py-16 md:py-24">
       <style>{`
@@ -93,19 +131,19 @@ export default function TestimonialsSection() {
         }
 
         @media (min-width: 768px) {
-          .testimonials-swiper .swiper-slide {
+          .testimonials-swiper.is-enhanced .swiper-slide {
             opacity: 0.5;
             transform: scale(0.95) !important;
           }
 
-          .testimonials-swiper .swiper-slide-active {
+          .testimonials-swiper.is-enhanced .swiper-slide-active {
             opacity: 1 !important;
             transform: scale(1) !important;
             z-index: 10;
           }
 
-          .testimonials-swiper .swiper-slide-next,
-          .testimonials-swiper .swiper-slide-prev {
+          .testimonials-swiper.is-enhanced .swiper-slide-next,
+          .testimonials-swiper.is-enhanced .swiper-slide-prev {
             opacity: 0.75 !important;
             transform: scale(0.98) !important;
           }
@@ -163,45 +201,47 @@ export default function TestimonialsSection() {
             </p>
           </div>
 
-          <div className="flex gap-3 pb-2">
-            <button
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--navy)] shadow-md transition-all duration-300 hover:border-[var(--navy)] hover:bg-[var(--navy)] hover:text-white hover:shadow-xl"
-              aria-label="Previous testimonial"
-              onClick={() => swiperRef.current?.slidePrev()}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+          {hasMultiple && (
+            <div className="flex gap-3 pb-2">
+              <button
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--navy)] shadow-md transition-all duration-300 hover:border-[var(--navy)] hover:bg-[var(--navy)] hover:text-white hover:shadow-xl"
+                aria-label="Previous testimonial"
+                onClick={() => swiperRef.current?.slidePrev()}
               >
-                <path d="M13 4l-6 6 6 6" />
-              </svg>
-            </button>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M13 4l-6 6 6 6" />
+                </svg>
+              </button>
 
-            <button
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--navy)] shadow-md transition-all duration-300 hover:border-[var(--navy)] hover:bg-[var(--navy)] hover:text-white hover:shadow-xl"
-              aria-label="Next testimonial"
-              onClick={() => swiperRef.current?.slideNext()}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <button
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--navy)] shadow-md transition-all duration-300 hover:border-[var(--navy)] hover:bg-[var(--navy)] hover:text-white hover:shadow-xl"
+                aria-label="Next testimonial"
+                onClick={() => swiperRef.current?.slideNext()}
               >
-                <path d="M7 4l6 6-6 6" />
-              </svg>
-            </button>
-          </div>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 4l6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         {loading ? (
@@ -221,11 +261,13 @@ export default function TestimonialsSection() {
               onSwiper={(sw) => {
                 swiperRef.current = sw;
               }}
-              centeredSlides={true}
+              centeredSlides={count >= 3}
               spaceBetween={24}
-              loop={testimonials.length > 1}
+              loop={canLoop}
+              watchOverflow={true}
+              allowTouchMove={hasMultiple}
               autoplay={
-                testimonials.length > 1
+                canLoop
                   ? {
                       delay: 5000,
                       disableOnInteraction: false,
@@ -233,14 +275,8 @@ export default function TestimonialsSection() {
                     }
                   : false
               }
-              breakpoints={{
-                0: { slidesPerView: 1, spaceBetween: 14 },
-                640: { slidesPerView: 1.15, spaceBetween: 16 },
-                768: { slidesPerView: 1.5, spaceBetween: 20 },
-                1024: { slidesPerView: 2.2, spaceBetween: 24 },
-                1280: { slidesPerView: 2.8, spaceBetween: 24 },
-              }}
-              className="testimonials-swiper"
+              breakpoints={breakpoints}
+              className={`testimonials-swiper ${count >= 3 ? "is-enhanced" : ""}`}
             >
               {testimonials.map((t) => (
                 <SwiperSlide key={t.id} className="!h-auto">
@@ -265,7 +301,7 @@ export default function TestimonialsSection() {
                           className="h-12 w-12 rounded-full border-2 border-[var(--border)] object-cover transition-all duration-300 group-hover:border-[var(--sky)]/30 md:h-14 md:w-14"
                           loading="lazy"
                         />
-                        <div className="pointer-events-none absolute inset-0 rounded-full border-2 border-[var(--sky)] opacity-0 transition-all duration-300 group-hover:opacity-100 scale-110" />
+                        <div className="pointer-events-none absolute inset-0 scale-110 rounded-full border-2 border-[var(--sky)] opacity-0 transition-all duration-300 group-hover:opacity-100" />
                       </div>
 
                       <div>
