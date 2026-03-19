@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
+import type { SwiperOptions } from "swiper/types";
 import sideSvg from "../../assets/images/side.svg";
 import {
   getActiveTestimonials,
@@ -33,6 +34,42 @@ function Stars({ count }: { count: number }) {
       ))}
     </div>
   );
+}
+
+function getBreakpointConfig(
+  count: number
+): NonNullable<SwiperOptions["breakpoints"]> {
+  const config: NonNullable<SwiperOptions["breakpoints"]> = {
+    0: { slidesPerView: 1, spaceBetween: 14 },
+  };
+
+  if (count <= 1) {
+    config[0] = { slidesPerView: 1, spaceBetween: 0 };
+    return config;
+  }
+
+  if (count === 2) {
+    config[640] = { slidesPerView: 1, spaceBetween: 16 };
+    config[768] = { slidesPerView: 1.2, spaceBetween: 18 };
+    config[1024] = { slidesPerView: 1.5, spaceBetween: 20 };
+    config[1280] = { slidesPerView: 1.6, spaceBetween: 20 };
+    return config;
+  }
+
+  if (count === 3) {
+    config[640] = { slidesPerView: 1.1, spaceBetween: 16 };
+    config[768] = { slidesPerView: 1.4, spaceBetween: 20 };
+    config[1024] = { slidesPerView: 1.8, spaceBetween: 24 };
+    config[1280] = { slidesPerView: 2.2, spaceBetween: 24 };
+    return config;
+  }
+
+  config[640] = { slidesPerView: 1.15, spaceBetween: 16 };
+  config[768] = { slidesPerView: 1.5, spaceBetween: 20 };
+  config[1024] = { slidesPerView: 2.2, spaceBetween: 24 };
+  config[1280] = { slidesPerView: 2.8, spaceBetween: 24 };
+
+  return config;
 }
 
 export default function TestimonialsSection() {
@@ -75,42 +112,7 @@ export default function TestimonialsSection() {
   const count = testimonials.length;
   const hasMultiple = count > 1;
   const canLoop = count >= 4;
-
-  const breakpoints = useMemo(() => {
-    if (count <= 1) {
-      return {
-        0: { slidesPerView: 1, spaceBetween: 0 },
-      };
-    }
-
-    if (count === 2) {
-      return {
-        0: { slidesPerView: 1, spaceBetween: 14 },
-        640: { slidesPerView: 1, spaceBetween: 16 },
-        768: { slidesPerView: 1.2, spaceBetween: 18 },
-        1024: { slidesPerView: 1.5, spaceBetween: 20 },
-        1280: { slidesPerView: 1.6, spaceBetween: 20 },
-      };
-    }
-
-    if (count === 3) {
-      return {
-        0: { slidesPerView: 1, spaceBetween: 14 },
-        640: { slidesPerView: 1.1, spaceBetween: 16 },
-        768: { slidesPerView: 1.4, spaceBetween: 20 },
-        1024: { slidesPerView: 1.8, spaceBetween: 24 },
-        1280: { slidesPerView: 2.2, spaceBetween: 24 },
-      };
-    }
-
-    return {
-      0: { slidesPerView: 1, spaceBetween: 14 },
-      640: { slidesPerView: 1.15, spaceBetween: 16 },
-      768: { slidesPerView: 1.5, spaceBetween: 20 },
-      1024: { slidesPerView: 2.2, spaceBetween: 24 },
-      1280: { slidesPerView: 2.8, spaceBetween: 24 },
-    };
-  }, [count]);
+  const breakpoints = getBreakpointConfig(count);
 
   return (
     <section className="container-wide relative overflow-x-hidden bg-[var(--surface)] py-16 md:py-24">
