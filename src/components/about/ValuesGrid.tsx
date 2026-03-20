@@ -1,29 +1,35 @@
 import { FiArrowUpRight } from "react-icons/fi";
 
+// ✅ IMPORT IMAGES
+import clientImg from "../../assets/images/client.webp";
+import teamImg from "../../assets/images/team-qualified.webp";
+import reliableImg from "../../assets/images/reliable-delivery.webp";
+import valueImg from "../../assets/images/value.webp";
+
 const values = [
   {
     id: "01",
     title: "Client-Focused",
     desc: "We identify core needs and deliver tailored solutions aligned with your budget, priorities, and timeline.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200",
+    image: clientImg,
   },
   {
     id: "02",
     title: "Qualified Team",
     desc: "A multi-disciplinary team including architects, engineers, finance consultants, business advisors, marketers, and legal professionals.",
-    image: "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1200",
+    image: teamImg,
   },
   {
     id: "03",
     title: "Reliable Delivery",
     desc: "Structured planning, transparent reporting, and accountability — ensuring a smooth, hassle-free experience.",
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200",
+    image: reliableImg,
   },
   {
     id: "04",
     title: "Value Enhancement",
     desc: "We align your property with market demands to strengthen usability, positioning, and long-term commercial value.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200",
+    image: valueImg,
   },
 ];
 
@@ -37,7 +43,8 @@ export default function ValuesGrid() {
         </p>
 
         <h2 className="mt-3 heading-font text-3xl md:text-4xl font-semibold text-[color:var(--navy)]">
-          Why Choose <span className="text-[color:var(--sky)]">Pearl Heritance</span>
+          Why Choose{" "}
+          <span className="text-[color:var(--sky)]">Pearl Heritance</span>
         </h2>
       </div>
 
@@ -49,7 +56,7 @@ export default function ValuesGrid() {
           return (
             <div
               key={v.id}
-              className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center`}
+              className="grid md:grid-cols-2 gap-8 md:gap-12 items-center"
             >
               {/* IMAGE */}
               <div className={reverse ? "md:order-2" : ""}>
@@ -57,7 +64,8 @@ export default function ValuesGrid() {
                   <img
                     src={v.image}
                     alt={v.title}
-                    className="w-full h-[260px] md:h-[300px] object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                    className="w-full h-[300px] md:h-[380px] object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
               </div>
