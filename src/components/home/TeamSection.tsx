@@ -328,28 +328,7 @@ export default function TeamSection() {
                   </span>
                 </div>
 
-                <div
-                  className="
-                    grid h-8 w-8 place-items-center rounded-full border border-[color:var(--navy)]/20
-                    text-[color:var(--navy)]
-                    opacity-0 -translate-x-1
-                    transition-all duration-300
-                    group-hover:translate-x-0 group-hover:opacity-100
-                    hover:border-[color:var(--navy)] hover:bg-[color:var(--navy)] hover:text-white
-                  "
-                  aria-hidden="true"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  >
-                    <path d="M3 13L13 3M13 3H6M13 3V10" />
-                  </svg>
-                </div>
+               
               </div>
 
               <div
