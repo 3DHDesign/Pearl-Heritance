@@ -14,11 +14,28 @@ export default function ServicesHeroSlider() {
 
   useEffect(() => {
     getServiceHeroSliders()
-      .then((res) => setSlides(res.data))
+      .then((res) => {
+        const data = res.data ?? [];
+        setSlides(data);
+        setActiveIndex(0); // reset safely
+      })
       .catch(console.error);
   }, []);
 
-  const goTo = (idx: number) => swiperRef.current?.slideToLoop(idx);
+  const goTo = (idx: number) => {
+    if (!swiperRef.current) return;
+    swiperRef.current.slideToLoop(idx);
+  };
+
+  // Prevent crash when slides update
+  useEffect(() => {
+    if (!slides.length) return;
+
+    setActiveIndex((prev) => {
+      if (prev >= slides.length) return 0;
+      return prev;
+    });
+  }, [slides.length]);
 
   if (!slides.length) return null;
 
@@ -26,7 +43,8 @@ export default function ServicesHeroSlider() {
     <section className="w-full">
       <div className="container-wide pt-10">
         <div className="overflow-hidden rounded-[34px] border border-[var(--border)] bg-white shadow-md">
-          {/* TOP: Service tabs */}
+          
+          {/* TOP: Tabs */}
           <div className="px-4 py-5 sm:px-6 sm:py-6 lg:px-10">
             <div className="mb-4 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-[var(--sky)]" />
@@ -41,7 +59,7 @@ export default function ServicesHeroSlider() {
 
                 return (
                   <button
-                    key={s.id}
+                    key={`tab-${s.id}`}
                     type="button"
                     onClick={() => goTo(idx)}
                     className={[
@@ -72,25 +90,33 @@ export default function ServicesHeroSlider() {
             </div>
           </div>
 
-          {/* BOTTOM: Hero image */}
+          {/* BOTTOM: Slider */}
           <div className="relative h-[58vh] min-h-[420px] w-full sm:h-[64vh] sm:min-h-[500px] lg:h-[70vh] lg:min-h-[560px]">
             <Swiper
               modules={[Autoplay]}
               slidesPerView={1}
-              loop
+              loop={slides.length > 1}
               speed={900}
-              autoplay={{
-                delay: 4500,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              }}
+              observer={true}
+              observeParents={true}
+              watchOverflow={true}
+              autoplay={
+                slides.length > 1
+                  ? {
+                      delay: 4500,
+                      disableOnInteraction: false,
+                      pauseOnMouseEnter: true,
+                    }
+                  : false
+              }
               onSwiper={(sw) => (swiperRef.current = sw)}
               onSlideChange={(sw) => setActiveIndex(sw.realIndex)}
               className="h-full w-full"
             >
-              {slides.map((s) => (
-                <SwiperSlide key={s.id}>
+              {slides.map((s, index) => (
+                <SwiperSlide key={`slide-${s.id}-${index}`}>
                   <div className="relative h-full w-full">
+                    
                     <img
                       src={s.background_image}
                       alt={s.key_title}
@@ -104,10 +130,11 @@ export default function ServicesHeroSlider() {
                     <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
 
-                    {/* TEXT PANEL */}
+                    {/* TEXT */}
                     <div className="relative z-10 flex h-full items-center">
                       <div className="container-wide">
                         <div className="max-w-3xl rounded-[24px] border border-white/10 bg-black/35 p-5 backdrop-blur-sm sm:rounded-[28px] sm:p-6 lg:p-8">
+                          
                           <div className="mb-3 inline-flex items-center gap-2 text-white/80 sm:mb-4">
                             <span className="h-2 w-2 rounded-full bg-[var(--sky)]" />
                             <span className="text-[10px] uppercase tracking-[0.22em] sm:text-xs">
@@ -130,7 +157,6 @@ export default function ServicesHeroSlider() {
                             {s.description}
                           </p>
 
-                          {/* hide buttons on mobile */}
                           <div className="mt-7 hidden flex-wrap gap-3 sm:flex">
                             <a
                               href={s.primary_button_link ?? "/contact"}
@@ -149,16 +175,18 @@ export default function ServicesHeroSlider() {
                       </div>
                     </div>
 
-                    {/* count badge */}
+                    {/* Counter */}
                     <div className="absolute right-4 top-4 z-20 rounded-full border border-white/15 bg-black/45 px-3 py-1.5 text-[11px] text-white backdrop-blur sm:right-5 sm:top-5 sm:px-4 sm:py-2 sm:text-xs">
                       {String(activeIndex + 1).padStart(2, "0")} /{" "}
                       {String(slides.length).padStart(2, "0")}
                     </div>
+
                   </div>
                 </SwiperSlide>
               ))}
             </Swiper>
           </div>
+
         </div>
       </div>
     </section>

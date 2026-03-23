@@ -49,8 +49,9 @@ export default function ProjectsSection() {
   const [section, setSection] = useState<SelectedWorksSection | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
 
-  const leftRefs = useRef<HTMLDivElement[]>([]);
-  const rightRefs = useRef<HTMLDivElement[]>([]);
+  // FIXED: Initialize refs correctly to avoid undefined errors in GSAP
+  const leftRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const rightRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     getSelectedWorks()
@@ -73,8 +74,9 @@ export default function ProjectsSection() {
     ScrollTrigger.normalizeScroll(true);
 
     const ctx = gsap.context(() => {
-      const leftCards = leftRefs.current.filter(Boolean);
-      const rightCards = rightRefs.current.filter(Boolean);
+      // FIXED: Clean filtering of refs
+      const leftCards = leftRefs.current.filter((el): el is HTMLDivElement => el !== null);
+      const rightCards = rightRefs.current.filter((el): el is HTMLDivElement => el !== null);
 
       leftCards.forEach((card, i) => {
         gsap.set(card, {
@@ -108,8 +110,8 @@ export default function ProjectsSection() {
         defaults: { ease: "power3.out" },
         scrollTrigger: {
           trigger: sectionRef.current!,
-          start: "top top",
-          end: `+=${steps * 650}`,
+          // FIXED: Use relative end for better scrolling experience
+          end: `+=${steps * 700}`,
           scrub: 1.6,
           pin: true,
           anticipatePin: 1,
@@ -262,9 +264,7 @@ export default function ProjectsSection() {
                 return (
                   <div
                     key={p.id}
-                    ref={(el) => {
-                      if (el) leftRefs.current[i] = el;
-                    }}
+                    ref={(el) => { leftRefs.current[i] = el; }}
                     className="absolute inset-0 group"
                   >
                     <ProjectCard
@@ -338,9 +338,7 @@ export default function ProjectsSection() {
                 return (
                   <div
                     key={p.id}
-                    ref={(el) => {
-                      if (el) rightRefs.current[i] = el;
-                    }}
+                    ref={(el) => { rightRefs.current[i] = el; }}
                     className="absolute inset-0 group"
                   >
                     <ProjectCard
@@ -389,15 +387,7 @@ export default function ProjectsSection() {
   );
 }
 
-function ProjectCard({
-  p,
-  index,
-  isActive,
-}: {
-  p: Project;
-  index: number;
-  isActive: boolean;
-}) {
+function ProjectCard({ p, index, isActive }: { p: Project; index: number; isActive: boolean }) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-white shadow-2xl transition-shadow duration-300 group-hover:shadow-3xl">
       <img
@@ -448,15 +438,7 @@ function ProjectCard({
   );
 }
 
-function MobileProjectCard({
-  p,
-  index,
-  total,
-}: {
-  p: Project;
-  index: number;
-  total: number;
-}) {
+function MobileProjectCard({ p, index, total }: { p: Project; index: number; total: number }) {
   return (
     <div className="overflow-hidden rounded-[24px] border border-[var(--border)] bg-white shadow-[0_20px_50px_-30px_rgba(0,0,0,0.35)]">
       <div className="relative h-[430px]">
