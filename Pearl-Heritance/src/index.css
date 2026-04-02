@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "swiper/css/pagination";
+@import "swiper/css/scrollbar";
+@import "swiper/css";
+
+
+:root{
+  --font-heading: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --navy: #0b2d4b;
+  --sky:  #2aa7df;
+
+  --bg: #ffffff;
+  --text: #0f172a;
+  --muted: #5f6b7a;     /* Rich grey - much more visible */
+  --border: #cbd5e1;    /* Clean border */
+  --surface: #f8fafc;   /* Keep as is */
+}
+
+/* Base */
+html, body { height: 100%; }
+body{
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Typography helpers */
+.heading-font{ font-family: var(--font-heading); }
+
+/* Containers (your exact system) */
+.container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 576px)  { .container { max-width: 540px; } }
+@media (min-width: 768px)  { .container { max-width: 720px; } }
+@media (min-width: 992px)  { .container { max-width: 960px; } }
+@media (min-width: 1200px) { .container { max-width: 1140px; } }
+@media (min-width: 1400px) { .container { max-width: 1320px; } }
+
+/* Wide container for main layouts */
+.container-wide {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 1200px) { .container-wide { max-width: 1440px; } }
+@media (min-width: 1600px) { .container-wide { max-width: 1600px; } }
+
+/* Extra-wide for big screens */
+.container-xxl {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 1536px) { .container-xxl { max-width: 1728px; } }
+@media (min-width: 1728px) { .container-xxl { max-width: 1800px; } }
+@media (min-width: 1920px) { .container-xxl { max-width: 1920px; } }
+
+/* Buttons */
+.btn-primary{
+  background: var(--navy);
+  color: white;
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+}
+.btn-accent{
+  background: var(--sky);
+  color: white;
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+}
+
+
+/* Add to your global CSS */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+body {
+  overflow-x: clip;
+}
