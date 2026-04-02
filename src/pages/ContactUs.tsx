@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
 import { getContactPage } from "../api/contact";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaXTwitter,
+import { 
   FaLocationDot,
   FaPhone,
   FaEnvelope,
@@ -201,10 +198,10 @@ export default function ContactUs() {
   );
 }
 
-function SocialBtn({ icon, href }: { icon: React.ReactNode; href: string }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="group h-12 w-12 rounded-xl bg-[var(--surface)] border border-[var(--border)] grid place-items-center text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg">
-      {icon}
-    </a>
-  );
-}
+// function SocialBtn({ icon, href }: { icon: React.ReactNode; href: string }) {
+//   return (
+//     <a href={href} target="_blank" rel="noopener noreferrer" className="group h-12 w-12 rounded-xl bg-[var(--surface)] border border-[var(--border)] grid place-items-center text-[var(--navy)] hover:bg-[var(--navy)] hover:text-white transition-all duration-300 shadow-sm hover:shadow-lg">
+//       {icon}
+//     </a>
+//   );
+// }
