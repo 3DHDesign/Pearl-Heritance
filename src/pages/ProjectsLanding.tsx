@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getProjectCategories,type ProjectCategory } from "../api/projectCategories";
+import { getProjectCategories, type ProjectCategory } from "../api/projectCategories";
+import SEO from "../components/SEO"; // Added Import
 
 export default function ProjectsLanding() {
   const [categories, setCategories] = useState<ProjectCategory[]>([]);
@@ -36,6 +37,12 @@ export default function ProjectsLanding() {
 
   return (
     <div className="bg-[var(--bg)]">
+      {/* Added SEO Tag */}
+      <SEO 
+        title="Our Projects | Luxury & Sustainable Architecture Portfolio"
+        description="{cat.title} Explore Pearl Heritance's architectural projects in Sri Lanka, ranging from luxury residential villas and commercial spaces to eco-friendly tourism developments."
+        keywords="architecture portfolio Sri Lanka, luxury villa designs, eco-resort architects, commercial building projects, interior design gallery Colombo, Pearl Heritance projects"
+      />
 
       {/* HERO */}
       <section className="container-wide pt-14 pb-12">

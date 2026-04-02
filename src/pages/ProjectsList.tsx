@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getProjectsByCategory, type ProjectItem } from "../api/projects";
+import SEO from "../components/SEO"; // Added Import
 
 export default function ProjectsList() {
   const { category } = useParams();
@@ -34,6 +35,13 @@ export default function ProjectsList() {
 
   return (
     <div className="bg-[var(--bg)]">
+      {/* Added Dynamic SEO Tag */}
+      <SEO 
+        title={`${decodedCategory || "Projects"} | Pearl Heritance Portfolio`} 
+        description={`Explore our collection of ${decodedCategory} projects. High-quality architectural and design solutions by Pearl Heritance in Sri Lanka.`}
+        keywords={`${decodedCategory} design, ${decodedCategory} architecture Sri Lanka, Pearl Heritance ${decodedCategory}`}
+      />
+
       {/* HEADER */}
       <section className="container-wide pb-10 pt-12">
         <Link

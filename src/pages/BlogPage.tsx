@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import BlogCard from "../components/blog/BlogCard";
 import { getBlogs, type BlogItem } from "../api/blogs";
+import SEO from "../components/SEO"; // Added Import
 
 type BlogCardData = {
   id: number;
@@ -45,6 +46,13 @@ export default function BlogPage() {
 
   return (
     <main className="bg-[var(--bg)] py-16 md:py-24">
+      {/* Added SEO Tag */}
+      <SEO 
+        title="Design Stories & Architecture Insights | Blog"
+        description="Explore Pearl Heritance's blog for the latest trends in Sri Lankan architecture, interior design ideas, and expert construction advice."
+        keywords="architecture blog Sri Lanka, interior design trends, construction insights Colombo, sustainable building tips, home renovation ideas, Pearl Heritance blog"
+      />
+
       <div className="container-wide">
         {/* HEADER */}
         <div className="mb-14 max-w-3xl md:mb-20">
