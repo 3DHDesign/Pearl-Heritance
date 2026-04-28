@@ -6,11 +6,13 @@ import {
   getServiceHeroSliders,
   type ServiceSlide,
 } from "../../api/serviceherosliders";
+import { motion } from "framer-motion";
 
 export default function ServicesHeroSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [slides, setSlides] = useState<ServiceSlide[]>([]);
+  
 
   useEffect(() => {
     getServiceHeroSliders()
@@ -113,10 +115,10 @@ export default function ServicesHeroSlider() {
               autoplay={
                 slides.length > 1
                   ? {
-                      delay: 4500,
-                      disableOnInteraction: false,
-                      pauseOnMouseEnter: true,
-                    }
+                    delay: 4500,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                  }
                   : false
               }
               onSwiper={(sw) => (swiperRef.current = sw)}
@@ -152,12 +154,25 @@ export default function ServicesHeroSlider() {
                           <h2 className="heading-font text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-5xl">
                             {s.title_line1}
                             <br />
-                            <span className="relative mt-2 inline-block sm:mt-3">
-                              <span className="relative z-10 bg-gradient-to-r from-[var(--navy)] to-[var(--sky)] bg-clip-text text-transparent">
-                                {s.title_line2}
-                              </span>
-                              <span className="absolute bottom-1 left-0 h-2 w-full rounded-lg bg-[var(--sky)]/20 -rotate-1 sm:bottom-2 sm:h-3" />
-                            </span>
+                            <span key={activeIndex} className="relative mt-2 inline-block sm:mt-3">
+  {/* TEXT */}
+  <motion.span
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, ease: "easeOut" }}
+   className="relative z-10 italic text-[var(--sky)]"
+  >
+    {s.title_line2}
+  </motion.span>
+
+  {/* UNDERLINE */}
+  <motion.span
+    initial={{ scaleX: 0 }}
+    animate={{ scaleX: 1 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+    className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
+  />
+</span>
                           </h2>
 
                           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-base md:text-lg">

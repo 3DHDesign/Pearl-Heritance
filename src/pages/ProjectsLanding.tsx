@@ -99,11 +99,11 @@ export default function ProjectsLanding() {
                 <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[var(--sky)] to-[var(--navy)] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 z-10" />
 
                 {/* NUMBER */}
-                <div className="absolute top-5 left-5 z-10">
+                {/* <div className="absolute top-5 left-5 z-10">
                   <span className="heading-font text-[13px] font-bold text-white bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1">
                     {cat.number}
                   </span>
-                </div>
+                </div> */}
 
                 {/* TAG */}
                 <div className="absolute top-5 right-5 z-10">

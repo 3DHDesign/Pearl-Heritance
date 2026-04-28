@@ -89,3 +89,18 @@ body{
 body {
   overflow-x: clip;
 }
+
+.services-mobile-swiper .swiper-button-prev,
+.services-mobile-swiper .swiper-button-next {
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+}
+
+.services-mobile-swiper .swiper-button-prev::after,
+.services-mobile-swiper .swiper-button-next::after {
+  font-size: 16px;
+}

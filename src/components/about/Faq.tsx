@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiArrowUpRight, FiHelpCircle } from "react-icons/fi";
 import { getActiveFaqs, type FAQItem } from "../../api/faqs";
+import faqImg from "../../assets/images/FAQ.png";
 
 export default function FAQSection() {
   const [faqData, setFaqData] = useState<FAQItem[]>([]);
@@ -82,8 +83,8 @@ export default function FAQSection() {
           <div className="relative">
             <div className="relative overflow-hidden rounded-3xl shadow-2xl">
               <img
-                src="https://images.pexels.com/photos/261146/pexels-photo-261146.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Architectural Interior"
+                 src={faqImg}
+  alt="FAQ"
                 className="h-[500px] w-full object-cover md:h-[550px]"
                 loading="lazy"
               />

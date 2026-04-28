@@ -44,9 +44,9 @@ const Home = () => {
   return (
     <div>
       <SEO 
-       title="Innovative Architecture & Planning | Indaka Udena Rathnapala" 
-       description="Pearl Heritance, led by Indaka Udena Rathnapala, is a premier Sri Lankan firm specializing in luxury residential, eco-friendly resorts, property management, and manufacturing."
-       keywords="Indaka Udena Rathnapala, Pearl Heritance, architects Sri Lanka, building design Colombo, luxury residential architecture, eco-friendly buildings Sri Lanka, property management Colombo, architectural manufacturing, interior design Sri Lanka, construction consultancy, building maintenance services, chartered architects Colombo, sustainable design Sri Lanka, high-end construction, property maintenance, bespoke fabrication"
+       title="Innovative Architecture & Planning  " 
+       description="Pearl Heritance  is a premier Sri Lankan firm specializing in luxury residential, eco-friendly resorts, property management, and manufacturing."
+       keywords="  Pearl Heritance, architects Sri Lanka, building design Colombo, luxury residential architecture, eco-friendly buildings Sri Lanka, property management Colombo, architectural manufacturing, interior design Sri Lanka, construction consultancy, building maintenance services, chartered architects Colombo, sustainable design Sri Lanka, high-end construction, property maintenance, bespoke fabrication"
        url="https://pearlhe.com/"
       />
 

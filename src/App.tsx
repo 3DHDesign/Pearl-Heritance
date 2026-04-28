@@ -12,13 +12,14 @@ import ProjectsList from "./pages/ProjectsList";
 import ProjectDetail from "./pages/ProjectDetail";
 import ContactUs from "./pages/ContactUs";
 import WhatsAppButton from "./components/common/WhatsAppButton";
+import ScrollToTop from "./components/ScrollToTop";
 
 
 function App() {
   return (
     <>
       <Header />
-
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blog" element={<BlogPage />} />
