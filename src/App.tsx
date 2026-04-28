@@ -19,7 +19,7 @@ function App() {
   return (
     <>
       <Header />
-      {/* this a component is scrooling to top when you change the page */}
+      {/* this a component is scrooling to top when */}
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
