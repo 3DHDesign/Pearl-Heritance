@@ -36,8 +36,8 @@ export default function ProjectsList() {
   return (
     <div className="bg-[var(--bg)]">
       {/* Added Dynamic SEO Tag */}
-      <SEO 
-        title={`${decodedCategory || "Projects"} | Pearl Heritance Portfolio`} 
+      <SEO
+        title={`${decodedCategory || "Projects"} | Pearl Heritance Portfolio`}
         description={`Explore our collection of ${decodedCategory} projects. High-quality architectural and design solutions by Pearl Heritance in Sri Lanka.`}
         keywords={`${decodedCategory} design, ${decodedCategory} architecture Sri Lanka, Pearl Heritance ${decodedCategory}`}
       />
@@ -173,9 +173,22 @@ export default function ProjectsList() {
                       {project.location}
                     </p>
 
-                    <h3 className="heading-font m-0 mb-2 text-[18px] font-bold leading-snug text-white">
-                      {project.title}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      {/* LOGO */}
+                       {/* TITLE */}
+                       <h3 className="heading-font m-0 text-[18px] font-bold leading-snug text-white">
+                        {project.title}
+                      </h3>
+                      {project.logo_url && project.logo_url !== "no" && (
+                        <img
+                          src={project.logo_url}
+                          alt={project.title}
+                          className="h-6 w-auto object-contain bg-white/80 rounded px-1 py-[2px]"
+                        />
+                      )}
+
+                     
+                    </div>
 
                     <div className="translate-y-2 opacity-0 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--sky)] transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100">
                       View Project

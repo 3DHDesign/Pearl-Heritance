@@ -13,6 +13,7 @@ export type ProjectItem = {
   location: string;
   year: string | null;
   image_url: string;
+  logo_url: string | null;
   project_link: string | null;
   category: string;
   category_card: string;

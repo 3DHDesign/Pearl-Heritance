@@ -156,9 +156,22 @@ export default function ProjectDetail() {
         </div>
 
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <h1 className="heading-font m-0 text-[clamp(28px,4.5vw,54px)] font-bold leading-[1.05] text-[var(--navy)]">
-            {project.title}
-          </h1>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="heading-font m-0 text-[clamp(28px,4.5vw,54px)] font-bold leading-[1.05] text-[var(--navy)]">
+              {project.title}
+            </h1>
+            {/* LOGO */}
+            {project.logo_url && project.logo_url !== "no" && (
+              <img
+                src={project.logo_url}
+                alt={project.title}
+                className="h-10 w-auto object-contain bg-white rounded px-2 py-1 shadow"
+              />
+            )}
+
+            {/* TITLE */}
+
+          </div>
 
           <div className="flex shrink-0 items-center gap-2 self-start md:self-end">
             <span className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[12px] font-medium text-[var(--muted)]">
