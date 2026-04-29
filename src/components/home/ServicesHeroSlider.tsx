@@ -7,12 +7,34 @@ import {
   type ServiceSlide,
 } from "../../api/serviceherosliders";
 import { motion } from "framer-motion";
+type ServiceSlideWithText = ServiceSlide & {
+  longText?: string;
+};
+
 
 export default function ServicesHeroSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [slides, setSlides] = useState<ServiceSlide[]>([]);
+  const [slides, setSlides] = useState<ServiceSlide[]>([]); 
+  const [selectedSlide, setSelectedSlide] = useState<ServiceSlideWithText | null>(null);
+
   
+  const longDescriptions: Record<string, string> = {
+    "Residential Buildings": `As we know, people are generally more sensitive about residential spaces compared to other types of environments. Therefore, we pay careful attention to functionality, spatial awareness, safety, and aesthetics—often even more so than our clients. Natural light and ventilation, along with air quality, are essential components of a living space. We strive to create practical, hassle-free living environments for everyone using our services. We are responsible for the statutory approval process and manage your project from its inception to completion and handover.`,
+    "Commercial & other buildings": `Commercial buildings are always considered investments, so we prioritize creating quality and safe spaces at minimal cost and with low maintenance. Our aim is to develop cost-effective projects that minimize energy consumption...`,
+
+    "Interior": `Interior arrangement transforms a space into a functional and aesthetically pleasing environment...`,
+
+    "Renovations": `Renovating a building can completely transform its exterior or interior. Our approach focuses on preserving the existing structure...`,
+
+    "Property Management": `We recognized that a property management service connected to the construction industry...`,
+
+    "Maintenance": `Maintaining a building properly is essential for a good living environment...`,
+
+    "Manufacturing": `Maintaining a building properly is essential for a good living environment and to preserve its condition...`,
+
+    "Tourist Amenities & eco-friendly buildings": `Currently, the tourism industry is expanding in various areas, and Sri Lanka has emerged as an excellent destination for both cultural and environmental tourism. In our projects, we focus on developing sustainable buildings that utilize renewable energy sources. Our spaces are designed to harmonize with nature, capturing a sense of local cultural simplicity and richness. The approval process for these types of projects can sometimes be quite rigorous, but we manage everything from the conceptual stage to completion.`,
+  };
 
   useEffect(() => {
     getServiceHeroSliders()
@@ -39,6 +61,7 @@ export default function ServicesHeroSlider() {
   }, [slides.length]);
 
   if (!slides.length) return null;
+
 
   return (
     <section className="w-full">
@@ -175,9 +198,28 @@ export default function ServicesHeroSlider() {
 </span>
                           </h2>
 
-                          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-base md:text-lg">
-                            {s.description}
-                          </p>
+                          <div className="mt-4 max-w-2xl sm:mt-5">
+  <p className="text-sm leading-relaxed text-white/85 sm:text-base md:text-lg">
+    {s.description}
+  </p>
+
+  {(() => {
+  const key = s.key_title?.trim().toLowerCase();
+
+  const longText = Object.entries(longDescriptions).find(([k]) =>
+    k.toLowerCase() === key
+  )?.[1];
+
+  return longText ? (
+    <button
+      onClick={() => setSelectedSlide({ ...s, longText })}
+      className="mt-2 text-[12px] font-semibold text-[var(--sky)] hover:underline"
+    >
+      View More
+    </button>
+  ) : null;
+})()}
+</div>
 
                           <div className="mt-7 hidden flex-wrap gap-3 sm:flex">
                             <a
@@ -209,6 +251,32 @@ export default function ServicesHeroSlider() {
           </div>
         </div>
       </div>
+      {selectedSlide && (
+  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4">
+
+    <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[24px] bg-white p-6 shadow-2xl">
+
+      {/* CLOSE */}
+      <button
+        onClick={() => setSelectedSlide(null)}
+        className="absolute right-4 top-4 text-gray-500 hover:text-black"
+      >
+        ✕
+      </button>
+
+      {/* TITLE */}
+      <h2 className="mb-3 text-lg font-bold">
+        {selectedSlide.key_title}
+      </h2>
+
+      {/* FULL TEXT */}
+      <p className="text-sm leading-relaxed text-gray-600">
+      <p>{selectedSlide.longText}</p>
+      </p>
+
+    </div>
+  </div>
+)}
     </section>
   );
 }
