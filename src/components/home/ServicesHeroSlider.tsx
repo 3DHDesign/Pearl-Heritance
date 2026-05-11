@@ -78,6 +78,26 @@ provide comprehensive solutions for all your interior requirements.`,
 
   if (!slides.length) return null;
 
+  function SubtitleTypewriter({ text }: { text: string }) {
+    const [displayedText, setDisplayedText] = useState("");
+  
+    useEffect(() => {
+      let i = 0;
+      setDisplayedText(""); 
+      const timer = setInterval(() => {
+        if (i < text.length) {
+          setDisplayedText((prev) => prev + text.charAt(i));
+          i++;
+        } else {
+          clearInterval(timer);
+        }
+      }, 50); // Adjust speed here (lower is faster)
+      return () => clearInterval(timer);
+    }, [text]);
+  
+    return <>{displayedText}</>;
+  }
+
 
   return (
     <section className="w-full">
@@ -191,28 +211,31 @@ provide comprehensive solutions for all your interior requirements.`,
                           </div>
 
                           <h2 className="heading-font text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-5xl">
-                            {s.title_line1}
-                            <br />
-                            <span key={activeIndex} className="relative mt-2 inline-block sm:mt-3">
-                              {/* TEXT */}
-                              <motion.span
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, ease: "easeOut" }}
-                                className="relative z-10 italic text-[var(--sky)]"
-                              >
-                                {s.title_line2}
-                              </motion.span>
+  {s.title_line1}
+  <br />
+  <span key={activeIndex} className="relative mt-2 inline-block sm:mt-3">
+    {/* TYPING TEXT */}
+    <motion.span
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="relative z-10 italic text-[var(--sky)]"
+    >
+      <SubtitleTypewriter text={s.title_line2 ?? ""} />
+    </motion.span>
 
-                              {/* UNDERLINE */}
-                              <motion.span
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ duration: 0.5, ease: "easeOut" }}
-                                className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
-                              />
-                            </span>
-                          </h2>
+    {/* SLOWER UNDERLINE */}
+    <motion.span
+      initial={{ scaleX: 0 }}
+      animate={{ scaleX: 1 }}
+      transition={{ 
+        duration: 0.8, // Slightly slower to match typing
+        delay: 0.2, 
+        ease: "easeOut" 
+      }}
+      className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
+    />
+  </span>
+</h2>
 
                           <div className="mt-4 max-w-2xl sm:mt-5">
                             <p className="text-sm leading-relaxed text-white/85 sm:text-base md:text-lg">
@@ -294,7 +317,7 @@ provide comprehensive solutions for all your interior requirements.`,
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--sky)]" />
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Service Details</p>
             </div>
-            <h2 className="heading-font text-2xl font-bold text-[var(--navy)]">
+            <h2 className="heading-font text-2xl font-bold  text-[var(--navy)]">
               {selectedSlide.key_title}
             </h2>
           </div>
@@ -308,7 +331,7 @@ provide comprehensive solutions for all your interior requirements.`,
         </div>
 
         <div className="overflow-y-auto pr-2 custom-scrollbar">
-          <p className="text-base leading-relaxed text-gray-600">
+          <p className="text-base leading-relaxed text-justify text-gray-600">
             {selectedSlide.longText}
           </p>
         </div>
