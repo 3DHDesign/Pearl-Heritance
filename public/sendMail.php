@@ -87,7 +87,7 @@ try {
 
     $mail->AltBody =
         "New Contact Form Submission\n\n" .
-        "Name: {$firstName} {$lastName}\n" .
+        "Name: {$firstName}\n" .
         "Email: {$email}\n" .
         "Phone: {$phone}\n\n" .
         "Message:\n{$message}";
