@@ -11,7 +11,6 @@ import SEO from "../components/SEO";
 
 type FormState = {
   firstName: string;
-  lastName: string;
   email: string;
   phone: string;
   message: string;
@@ -22,7 +21,6 @@ type ContactData = Awaited<ReturnType<typeof getContactPage>>["data"];
 export default function ContactUs() {
   const [form, setForm] = useState<FormState>({
     firstName: "",
-    lastName: "",
     email: "",
     phone: "",
     message: "",
@@ -70,7 +68,6 @@ export default function ContactUs() {
 
       setForm({
         firstName: "",
-        lastName: "",
         email: "",
         phone: "",
         message: "",

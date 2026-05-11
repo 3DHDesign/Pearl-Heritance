@@ -28,13 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$firstName = trim($data['firstName'] ?? '');
-$lastName  = trim($data['lastName'] ?? '');
+$firstName = trim($data['firstName'] ?? ''); 
 $email     = trim($data['email'] ?? '');
 $phone     = trim($data['phone'] ?? '');
 $message   = trim($data['message'] ?? '');
 
-if (!$firstName || !$lastName || !$email || !$message) {
+if (!$firstName || !$email || !$message) {
     http_response_code(422);
     echo json_encode([
         "success" => false,
@@ -65,7 +64,7 @@ try {
 
     $mail->setFrom('info@pearlhe.com', 'Pearl Heritance Website');
     $mail->addAddress('info@pearlhe.com', 'Pearl Heritance');
-    $mail->addReplyTo($email, $firstName . ' ' . $lastName);
+    $mail->addReplyTo($email, $firstName );
 
     $mail->isHTML(true);
     $mail->Subject = 'New Contact Form Submission - Pearl Heritance';
