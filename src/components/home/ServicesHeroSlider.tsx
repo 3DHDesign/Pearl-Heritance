@@ -15,23 +15,39 @@ type ServiceSlideWithText = ServiceSlide & {
 export default function ServicesHeroSlider() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [slides, setSlides] = useState<ServiceSlide[]>([]); 
+  const [slides, setSlides] = useState<ServiceSlide[]>([]);
   const [selectedSlide, setSelectedSlide] = useState<ServiceSlideWithText | null>(null);
 
-  
+
   const longDescriptions: Record<string, string> = {
-    "Residential Buildings": `As we know, people are generally more sensitive about residential spaces compared to other types of environments. Therefore, we pay careful attention to functionality, spatial awareness, safety, and aesthetics—often even more so than our clients. Natural light and ventilation, along with air quality, are essential components of a living space. We strive to create practical, hassle-free living environments for everyone using our services. We are responsible for the statutory approval process and manage your project from its inception to completion and handover.`,
-    "Commercial & other buildings": `Commercial buildings are always considered investments, so we prioritize creating quality and safe spaces at minimal cost and with low maintenance. Our aim is to develop cost-effective projects that minimize energy consumption...`,
+    "Residential Buildings": `As we know, people are generally more sensitive about residential spaces compared to
+other types of environments. Therefore, we pay careful attention to functionality, spatial
+awareness, safety, and aesthetics-often even more so than our clients. Natural light and
+ventilation, along with air quality, are essential components of a living space. We strive to
+create practical, hassle-free living environments for everyone using our services, We are
+responsible for the statutory approval process and manage your project from its incep-
+tion to completion and handover`,
+    "Commercial & other buildings": `Commercial buildings are always considered investments, so we prioritize creating quali-
+ty and safe spaces at minimal cost and with low maintenance. Our aim is to develop cost
+effective projects that minimize energy consumption. We design flexible spaces that
+can adapt to multiple functions over time. All projects must comply with building regula-
+tions and meet ISO and green building standards, Fire safety and other safety factors are
+critical in commercial projects. Obtaining statutory approval and the Certificate of Con-
+formity (COC) for these projects is essential. We are responsible for both the project
+execution and the maintenance period.`,
 
-    "Interior": `Interior arrangement transforms a space into a functional and aesthetically pleasing environment...`,
+    "Interior": `Interior arrangement transforms a space into a functional and aesthetically pleasing environment, marking the true completion of a building project. It should be practical,affordable, and elegant, seamlessly blend-
+ing with the architecture of the area. Our goal is to create a sense of comfort and style while keeping costs to a minimum. We always strive to be attentive to our clients'
+needs and carefully study the architecture of the space to deliver the best results. We
+provide comprehensive solutions for all your interior requirements.`,
 
-    "Renovations": `Renovating a building can completely transform its exterior or interior. Our approach focuses on preserving the existing structure...`,
+    "Renovations": `Renovating a building can completely transform its exterior or interior. Our approach focuses on preserving the existing structure as much as possible while making minimal alterations and additions. We assess the current situation, adhere to building regulations, and consider the renovation's purpose to ensure you achieve the best return on your investment.`,
 
-    "Property Management": `We recognized that a property management service connected to the construction industry...`,
+    "Property Management": `We recognized that a property management service connected to the construction industry and development consulting would be highly beneficial for our clients. We take responsibility for letting. purchasing, and selling properties. Additionally, we offer services for property development and renovation, and assist with legal processes and advertising related to your properties.`,
 
-    "Maintenance": `Maintaining a building properly is essential for a good living environment...`,
+    "Maintenance": `Maintaining a building properly is essential for a good living environment and to pre-serve its condition. We offer services through skilled professionals under expert supervision.`,
 
-    "Manufacturing": `Maintaining a building properly is essential for a good living environment and to preserve its condition...`,
+    "Manufacturing": `Maintaining a building properly is essential for a good living environment and to preserve its condition. We offer services through skilled professionals under expert supervision.`,
 
     "Tourist Amenities & eco-friendly buildings": `Currently, the tourism industry is expanding in various areas, and Sri Lanka has emerged as an excellent destination for both cultural and environmental tourism. In our projects, we focus on developing sustainable buildings that utilize renewable energy sources. Our spaces are designed to harmonize with nature, capturing a sense of local cultural simplicity and richness. The approval process for these types of projects can sometimes be quite rigorous, but we manage everything from the conceptual stage to completion.`,
   };
@@ -178,48 +194,49 @@ export default function ServicesHeroSlider() {
                             {s.title_line1}
                             <br />
                             <span key={activeIndex} className="relative mt-2 inline-block sm:mt-3">
-  {/* TEXT */}
-  <motion.span
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, ease: "easeOut" }}
-   className="relative z-10 italic text-[var(--sky)]"
-  >
-    {s.title_line2}
-  </motion.span>
+                              {/* TEXT */}
+                              <motion.span
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className="relative z-10 italic text-[var(--sky)]"
+                              >
+                                {s.title_line2}
+                              </motion.span>
 
-  {/* UNDERLINE */}
-  <motion.span
-    initial={{ scaleX: 0 }}
-    animate={{ scaleX: 1 }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
-    className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
-  />
-</span>
+                              {/* UNDERLINE */}
+                              <motion.span
+                                initial={{ scaleX: 0 }}
+                                animate={{ scaleX: 1 }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
+                                className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
+                              />
+                            </span>
                           </h2>
 
                           <div className="mt-4 max-w-2xl sm:mt-5">
-  <p className="text-sm leading-relaxed text-white/85 sm:text-base md:text-lg">
-    {s.description}
-  </p>
+                            <p className="text-sm leading-relaxed text-white/85 sm:text-base md:text-lg">
+                              {s.description}
+                            </p>
 
-  {(() => {
-  const key = s.key_title?.trim().toLowerCase();
+                            {(() => {
+                              const key = s.key_title?.trim().toLowerCase();
 
-  const longText = Object.entries(longDescriptions).find(([k]) =>
-    k.toLowerCase() === key
-  )?.[1];
+                              const longText = Object.entries(longDescriptions).find(([k]) =>
+                                k.toLowerCase() === key
+                              )?.[1];
 
-  return longText ? (
-    <button
-      onClick={() => setSelectedSlide({ ...s, longText })}
-      className="mt-2 text-[12px] font-semibold text-[var(--sky)] hover:underline"
-    >
-      View More
-    </button>
-  ) : null;
-})()}
-</div>
+                              return longText ? (
+                                <button
+                                  onClick={() => setSelectedSlide({ ...s, longText })}
+                                  className="mt-3 inline-flex items-center gap-1 text-[13px] font-bold uppercase tracking-wider text-[var(--sky)] hover:opacity-80 lg:hidden"
+                                >
+                                  View 
+                                  <span className="text-lg">→</span>
+                                </button>
+                              ) : null;
+                            })()}
+                          </div>
 
                           <div className="mt-7 hidden flex-wrap gap-3 sm:flex">
                             <a
@@ -252,29 +269,53 @@ export default function ServicesHeroSlider() {
         </div>
       </div>
       {selectedSlide && (
-  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/70 p-4">
+  <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+    {/* Backdrop with Blur */}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      onClick={() => setSelectedSlide(null)}
+      className="absolute inset-0 bg-[var(--navy)]/40 backdrop-blur-md"
+    />
 
-    <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[24px] bg-white p-6 shadow-2xl">
+    {/* Modal Content */}
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      className="relative max-h-[85vh] w-full max-w-xl overflow-hidden rounded-[32px] border border-white/20 bg-white shadow-2xl"
+    >
+      {/* Decorative Header Area */}
+      <div className="h-2 w-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]" />
+      
+      <div className="p-8 sm:p-10">
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--sky)]" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Service Details</p>
+            </div>
+            <h2 className="heading-font text-2xl font-bold text-[var(--navy)]">
+              {selectedSlide.key_title}
+            </h2>
+          </div>
+          
+          <button
+            onClick={() => setSelectedSlide(null)}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--navy)] transition hover:bg-[var(--navy)] hover:text-white"
+          >
+            ✕
+          </button>
+        </div>
 
-      {/* CLOSE */}
-      <button
-        onClick={() => setSelectedSlide(null)}
-        className="absolute right-4 top-4 text-gray-500 hover:text-black"
-      >
-        ✕
-      </button>
+        <div className="overflow-y-auto pr-2 custom-scrollbar">
+          <p className="text-base leading-relaxed text-gray-600">
+            {selectedSlide.longText}
+          </p>
+        </div>
 
-      {/* TITLE */}
-      <h2 className="mb-3 text-lg font-bold">
-        {selectedSlide.key_title}
-      </h2>
-
-      {/* FULL TEXT */}
-      <p className="text-sm leading-relaxed text-gray-600">
-      <p>{selectedSlide.longText}</p>
-      </p>
-
-    </div>
+         
+      </div>
+    </motion.div>
   </div>
 )}
     </section>
