@@ -135,10 +135,10 @@ export default function ContactUs() {
               </h2>
 
               <form onSubmit={submit} className="mt-10 space-y-5">
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <input name="firstName" value={form.firstName} onChange={onChange} placeholder="First Name" className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5" required />
-                  <input name="lastName" value={form.lastName} onChange={onChange} placeholder="Last Name" className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5" required />
-                </div>
+                
+                  <input name="firstName" value={form.firstName} onChange={onChange} placeholder="Name" className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5" required />
+                 
+               
 
                 <input name="email" type="email" value={form.email} onChange={onChange} placeholder="Email Address" className="h-14 w-full rounded-xl bg-[var(--surface)] border border-[var(--border)] px-5" required />
 

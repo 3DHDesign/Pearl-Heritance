@@ -71,7 +71,6 @@ try {
     $mail->Subject = 'New Contact Form Submission - Pearl Heritance';
 
     $safeFirstName = htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8');
-    $safeLastName  = htmlspecialchars($lastName, ENT_QUOTES, 'UTF-8');
     $safeEmail     = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
     $safePhone     = htmlspecialchars($phone, ENT_QUOTES, 'UTF-8');
     $safeMessage   = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
@@ -79,7 +78,7 @@ try {
     $mail->Body = "
         <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937;'>
           <h2 style='margin-bottom: 16px;'>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> {$safeFirstName} {$safeLastName}</p>
+          <p><strong>Name:</strong> {$safeFirstName} </p>
           <p><strong>Email:</strong> {$safeEmail}</p>
           <p><strong>Phone:</strong> {$safePhone}</p>
           <p><strong>Message:</strong><br>{$safeMessage}</p>
