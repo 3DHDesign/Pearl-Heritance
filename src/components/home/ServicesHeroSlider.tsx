@@ -80,21 +80,29 @@ provide comprehensive solutions for all your interior requirements.`,
 
   function SubtitleTypewriter({ text }: { text: string }) {
     const [displayedText, setDisplayedText] = useState("");
-  
+
     useEffect(() => {
-      let i = 0;
-      setDisplayedText(""); 
-      const timer = setInterval(() => {
-        if (i < text.length) {
-          setDisplayedText((prev) => prev + text.charAt(i));
-          i++;
-        } else {
-          clearInterval(timer);
+      let index = 0;
+      let timeoutId: number;
+
+      setDisplayedText("");
+
+      const typeNext = () => {
+        index += 1;
+        setDisplayedText(text.slice(0, index));
+
+        if (index < text.length) {
+          timeoutId = window.setTimeout(typeNext, 50);
         }
-      }, 50); // Adjust speed here (lower is faster)
-      return () => clearInterval(timer);
+      };
+
+      timeoutId = window.setTimeout(typeNext, 50);
+
+      return () => {
+        window.clearTimeout(timeoutId);
+      };
     }, [text]);
-  
+
     return <>{displayedText}</>;
   }
 
@@ -210,32 +218,24 @@ provide comprehensive solutions for all your interior requirements.`,
                             </span>
                           </div>
 
-                          <h2 className="heading-font text-3xl font-bold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-5xl">
-  {s.title_line1}
-  <br />
-  <span key={activeIndex} className="relative mt-2 inline-block sm:mt-3">
-    {/* TYPING TEXT */}
-    <motion.span
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="relative z-10 italic text-[var(--sky)]"
-    >
-      <SubtitleTypewriter text={s.title_line2 ?? ""} />
-    </motion.span>
+                          <h2 className="heading-font leading-[1.08] tracking-tight">
+                            <span className="block text-2xl font-medium text-white/70 sm:text-3xl md:text-3xl">
+                              {s.title_line1}
+                            </span>
 
-    {/* SLOWER UNDERLINE */}
-    <motion.span
-      initial={{ scaleX: 0 }}
-      animate={{ scaleX: 1 }}
-      transition={{ 
-        duration: 0.8, // Slightly slower to match typing
-        delay: 0.2, 
-        ease: "easeOut" 
-      }}
-      className="absolute bottom-0 left-0 h-[4px] w-full origin-left rounded-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]"
-    />
-  </span>
-</h2>
+                            <motion.span
+                              key={activeIndex}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{
+                                duration: 0.45,
+                                ease: "easeOut",
+                              }}
+                              className="mt-2 block text-4xl font-extrabold italic leading-[1.02] text-[#2FAFE8] sm:mt-3 sm:text-4xl md:text-5xl"
+                            >
+                              <SubtitleTypewriter text={s.title_line2 ?? ""} />
+                            </motion.span>
+                          </h2>
 
                           <div className="mt-4 max-w-2xl sm:mt-5">
                             <p className="text-sm leading-relaxed text-white/85 sm:text-base md:text-lg">
@@ -254,7 +254,7 @@ provide comprehensive solutions for all your interior requirements.`,
                                   onClick={() => setSelectedSlide({ ...s, longText })}
                                   className="mt-3 inline-flex items-center gap-1 text-[13px] font-bold uppercase tracking-wider text-[var(--sky)] hover:opacity-80 lg:hidden"
                                 >
-                                  View 
+                                  View
                                   <span className="text-lg">→</span>
                                 </button>
                               ) : null;
@@ -292,55 +292,55 @@ provide comprehensive solutions for all your interior requirements.`,
         </div>
       </div>
       {selectedSlide && (
-  <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
-    {/* Backdrop with Blur */}
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      onClick={() => setSelectedSlide(null)}
-      className="absolute inset-0 bg-[var(--navy)]/40 backdrop-blur-md"
-    />
-
-    {/* Modal Content */}
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.95, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="relative max-h-[85vh] w-full max-w-xl overflow-hidden rounded-[32px] border border-white/20 bg-white shadow-2xl"
-    >
-      {/* Decorative Header Area */}
-      <div className="h-2 w-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]" />
-      
-      <div className="p-8 sm:p-10">
-        <div className="mb-6 flex items-start justify-between">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--sky)]" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Service Details</p>
-            </div>
-            <h2 className="heading-font text-2xl font-bold  text-[var(--navy)]">
-              {selectedSlide.key_title}
-            </h2>
-          </div>
-          
-          <button
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+          {/* Backdrop with Blur */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             onClick={() => setSelectedSlide(null)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--navy)] transition hover:bg-[var(--navy)] hover:text-white"
+            className="absolute inset-0 bg-[var(--navy)]/40 backdrop-blur-md"
+          />
+
+          {/* Modal Content */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="relative max-h-[85vh] w-full max-w-xl overflow-hidden rounded-[32px] border border-white/20 bg-white shadow-2xl"
           >
-            ✕
-          </button>
-        </div>
+            {/* Decorative Header Area */}
+            <div className="h-2 w-full bg-gradient-to-r from-[var(--sky)] via-[var(--navy)] to-[var(--sky)]" />
 
-        <div className="overflow-y-auto pr-2 custom-scrollbar">
-          <p className="text-base leading-relaxed text-justify text-gray-600">
-            {selectedSlide.longText}
-          </p>
-        </div>
+            <div className="p-8 sm:p-10">
+              <div className="mb-6 flex items-start justify-between">
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--sky)]" />
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)]">Service Details</p>
+                  </div>
+                  <h2 className="heading-font text-2xl font-bold  text-[var(--navy)]">
+                    {selectedSlide.key_title}
+                  </h2>
+                </div>
 
-         
-      </div>
-    </motion.div>
-  </div>
-)}
+                <button
+                  onClick={() => setSelectedSlide(null)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--navy)] transition hover:bg-[var(--navy)] hover:text-white"
+                >
+                   
+                </button>
+              </div>
+
+              <div className="overflow-y-auto pr-2 custom-scrollbar">
+                <p className="text-base leading-relaxed text-justify text-gray-600">
+                  {selectedSlide.longText}
+                </p>
+              </div>
+
+
+            </div>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

@@ -83,6 +83,8 @@ const Home = () => {
       <SafeMount delay={800}>
         <BlogSection />
       </SafeMount>
+
+      
     </div>
   );
 };

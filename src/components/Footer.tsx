@@ -284,9 +284,22 @@ export default function Footer() {
           </div>
 
           {/* bottom bar */}
+          {/* bottom bar */}
           <div className="relative z-10 mt-12 flex flex-col items-center justify-between gap-3 border-t border-black/[0.07] pt-7 sm:flex-row">
             <p className="m-0 text-center text-[13px] text-[color:var(--muted)] sm:text-left">
               © {new Date().getFullYear()} Pearl Heritance. All rights reserved.
+            </p>
+
+            <p className="m-0 text-center text-[13px] text-[color:var(--muted)] sm:text-right">
+              Design & Developed by{" "}
+              <a
+                href="https://3dhdesign.com"
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-[color:var(--navy)] no-underline transition-colors duration-200 hover:text-[color:var(--sky)]"
+              >
+                3DH Design
+              </a>
             </p>
           </div>
 

@@ -28,13 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$firstName = trim($data['firstName'] ?? '');
-$lastName  = trim($data['lastName'] ?? '');
+$firstName = trim($data['firstName'] ?? ''); 
 $email     = trim($data['email'] ?? '');
 $phone     = trim($data['phone'] ?? '');
 $message   = trim($data['message'] ?? '');
 
-if (!$firstName || !$lastName || !$email || !$message) {
+if (!$firstName || !$email || !$message) {
     http_response_code(422);
     echo json_encode([
         "success" => false,
@@ -65,13 +64,12 @@ try {
 
     $mail->setFrom('info@pearlhe.com', 'Pearl Heritance Website');
     $mail->addAddress('info@pearlhe.com', 'Pearl Heritance');
-    $mail->addReplyTo($email, $firstName . ' ' . $lastName);
+    $mail->addReplyTo($email, $firstName );
 
     $mail->isHTML(true);
     $mail->Subject = 'New Contact Form Submission - Pearl Heritance';
 
     $safeFirstName = htmlspecialchars($firstName, ENT_QUOTES, 'UTF-8');
-    $safeLastName  = htmlspecialchars($lastName, ENT_QUOTES, 'UTF-8');
     $safeEmail     = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
     $safePhone     = htmlspecialchars($phone, ENT_QUOTES, 'UTF-8');
     $safeMessage   = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
@@ -79,7 +77,7 @@ try {
     $mail->Body = "
         <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #1f2937;'>
           <h2 style='margin-bottom: 16px;'>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> {$safeFirstName} {$safeLastName}</p>
+          <p><strong>Name:</strong> {$safeFirstName} </p>
           <p><strong>Email:</strong> {$safeEmail}</p>
           <p><strong>Phone:</strong> {$safePhone}</p>
           <p><strong>Message:</strong><br>{$safeMessage}</p>
@@ -88,7 +86,7 @@ try {
 
     $mail->AltBody =
         "New Contact Form Submission\n\n" .
-        "Name: {$firstName} {$lastName}\n" .
+        "Name: {$firstName}\n" .
         "Email: {$email}\n" .
         "Phone: {$phone}\n\n" .
         "Message:\n{$message}";

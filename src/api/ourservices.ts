@@ -8,6 +8,7 @@ export type ServiceItem = {
   title: string;
   short_description: string;
   description: string;
+  is_active: boolean;
   highlights: Highlight[];
   image: string;
   primary_text: string;

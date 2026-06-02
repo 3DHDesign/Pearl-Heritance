@@ -57,17 +57,16 @@ export default function ExpertiseHero() {
                 </span>
               </div>
 
-              <h1 className="heading-font text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.05] tracking-tight">
-                {hero.title_line1}
-                <br />
-                <span className="relative inline-block mt-3">
-                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--navy)] to-[var(--sky)]">
-                    {hero.title_line2}
-                  </span>
-                  <span className="absolute bottom-2 left-0 w-full h-3 bg-[var(--sky)]/20 -rotate-1 rounded-lg -z-0" />
+              <h1 className="heading-font leading-[1.06] tracking-tight">
+                <span className="block text-3xl font-medium text-white/65 md:text-4xl lg:text-5xl">
+                  {hero.title_line1}
+                </span>
+
+                <span className="mt-3 block max-w-4xl text-4xl font-extrabold leading-[1.05] text-[#2FAFE8] md:text-5xl lg:text-6xl">
+                  {hero.title_line2}
                 </span>
               </h1>
-
+              
               <p className="mt-6 text-base md:text-lg text-white/80 leading-relaxed max-w-2xl">
                 {hero.description}
               </p>

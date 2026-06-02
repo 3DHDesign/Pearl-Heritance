@@ -32,7 +32,7 @@ export default function ServicesShowcase() {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  const services = section?.services ?? [];
+  const services = section?.services.filter((service) => service.is_active) ?? [];
 
   useEffect(() => {
     if (!services.length) return;
@@ -51,6 +51,8 @@ export default function ServicesShowcase() {
   }, [isMobile, pause, services.length]);
 
   if (!section) return null;
+
+  if (!services.length) return null;
 
   const current = services[active] ?? services[0];
 
